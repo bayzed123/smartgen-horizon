@@ -20,65 +20,6 @@
     
     <link rel="stylesheet" href="./assets/css/style.css">
     
-    <!-- Animated Badge CSS -->
-    <style>
-        .horizontally {
-            height: 45px;	
-            max-width: 500px;
-            margin: 0 auto 1.5rem auto; /* Centered in hero section */
-            overflow: hidden;
-            position: relative;
-            background: #ffc107; /* Updated to match theme yellow */
-            color: #856404; /* Darker text for readability */
-            border: 1px solid #ffeeba;
-            border-radius: 50px;
-            font-weight: bold;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-        .horizontally p {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            line-height: 45px;
-            text-align: center;
-            white-space: nowrap; /* Prevents text from breaking into two lines */
-            font-size: 0.95rem;
-            
-            /* Starting position */
-            -moz-transform: translateX(30%);
-            -webkit-transform: translateX(30%);	
-            transform: translateX(30%);
-            
-            /* Apply animation to this element */	
-            -moz-animation: horizontally 4s linear infinite alternate;
-            -webkit-animation: horizontally 4s linear infinite alternate;
-            animation: horizontally 4s linear infinite alternate;
-        }
-        
-        /* Move it (define the animation) */
-        @-moz-keyframes horizontally {
-            0%   { -moz-transform: translateX(30%); }
-            100% { -moz-transform: translateX(-30%); }
-        }
-        @-webkit-keyframes horizontally {
-            0%   { -webkit-transform: translateX(30%); }
-            100% { -webkit-transform: translateX(-30%); }
-        }
-        @keyframes horizontally {
-            0%   { 
-                -moz-transform: translateX(30%);
-                -webkit-transform: translateX(30%);
-                transform: translateX(30%); 		
-            }
-            100% { 
-                -moz-transform: translateX(-30%);
-                -webkit-transform: translateX(-30%);
-                transform: translateX(-30%); 
-            }
-        }
-    </style>
-
     <!-- Essential Core Scripts (Needed for build/workflows and header/footer injection) -->
     <script src="./assets/js/app.js" defer></script>
     <script src="./assets/js/search-data.js" defer></script>
@@ -111,14 +52,12 @@
         <section class="hero" style="text-align: center; padding: 5rem 0; background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%); border-bottom: 2px dashed #ffc107;">
             <div class="container">
                 
-                <!-- 🚧 Animated Beta Badge -->
-                <div class="horizontally">
-                    <p>🚧 SmartGen Horizon: Beta Testing Environment</p>
-                </div><div style="max-width: 500px; margin: 0 auto 1.5rem auto;">
-    <marquee behavior="alternate" scrollamount="4" style="background: #ffc107; color: #856404; padding: 0.5rem 1.2rem; border-radius: 50px; font-weight: bold; border: 1px solid #ffeeba; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-        🚧 SmartGen Horizon: Beta Testing Environment
-    </marquee>
-</div>
+                <!-- 🚧 Animated Beta Badge (Simple Marquee) -->
+                <div style="max-width: 500px; margin: 0 auto 1.5rem auto;">
+                    <marquee behavior="alternate" scrollamount="4" style="background: #ffc107; color: #856404; padding: 0.5rem 1.2rem; border-radius: 50px; font-weight: bold; font-size: 0.95rem; border: 1px solid #ffeeba; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        🚧 SmartGen Horizon: Beta Testing Environment
+                    </marquee>
+                </div>
 
                 <h1 style="font-size: 3.5rem; margin-bottom: 1.5rem;">SmartGen <span style="color: #d97706;">Playground</span></h1>
                 
