@@ -8,177 +8,179 @@
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Mono&amp;display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'DM Sans', sans-serif; }
+    body { font-family: 'DM Sans', sans-serif; background: #0a1f1a; color: #d1fae5; }
     .code-output { font-family: 'Space Mono', monospace; font-size: 12px; }
     .toast { animation: slideIn 0.3s ease, fadeOut 0.3s ease 2s forwards; }
     @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     @keyframes fadeOut { to { opacity: 0; } }
-    .tab-btn { padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-    .tab-btn.active { background: #065f46; color: #86efac; }
-    .tab-btn:not(.active) { background: transparent; color: #86efac; }
+    .tab-btn { padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; background: transparent; color: #86efac; border: 1px solid transparent; }
+    .tab-btn.active { background: #065f46; color: #86efac; border-color: #10b981; }
     .tab-btn:not(.active):hover { color: #bbf7d0; }
-
-    /* CSS Marquee animations for examples */
-    @keyframes marquee-scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    @keyframes marquee-slide { 0% { transform: translateX(100%); } 100% { transform: translateX(0); } }
-    @keyframes marquee-bounce { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(calc(100% - 200px)); } }
-    @keyframes marquee-scroll-img { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
-    @keyframes marquee-slide-img { 0% { transform: translateX(100%); } 100% { transform: translateX(0); } }
-    @keyframes marquee-bounce-img { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(calc(100% - 80px)); } }
-    .css-scroll { display: inline-block; animation: marquee-scroll 8s linear infinite; }
-    .css-slide { display: inline-block; animation: marquee-slide 3s ease forwards; }
-    .css-bounce { display: inline-block; animation: marquee-bounce 4s ease-in-out infinite; }
-    .css-scroll-img { display: inline-block; animation: marquee-scroll-img 8s linear infinite; }
-    .css-slide-img { display: inline-block; animation: marquee-slide-img 3s ease forwards; }
-    .css-bounce-img { display: inline-block; animation: marquee-bounce-img 4s ease-in-out infinite; }
+    .panel { background: #0d2e24; border: 1px solid #1a5c45; border-radius: 12px; padding: 20px; }
+    .field-input { width: 100%; background: #071a14; border: 1px solid #1a5c45; border-radius: 8px; padding: 6px 12px; color: #d1fae5; font-size: 14px; outline: none; }
+    .field-input:focus { border-color: #34d399; }
+    .field-label { display: block; font-size: 13px; color: #a7f3d0; margin-bottom: 4px; }
   </style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
  <script src="/_sdk/telemetry_sdk.js"></script></head>
  <body data-template-id="__page-root" class="min-h-screen w-full">
   <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
-  <header class="border-b border-green-700/40 px-6 py-4 bg-gradient-to-r from-green-900/30 to-emerald-900/20">
-   <div class="max-w-7xl mx-auto flex items-center justify-between">
-    <h1 data-template-id="app-title" class="canva-text font-bold"></h1><button id="reset-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-green-700/60 text-green-50 hover:bg-green-600 transition-colors text-sm font-medium"> <i data-lucide="rotate-ccw" style="width:14px;height:14px"></i> Reset </button>
+  <header class="border-b border-emerald-800/50 px-6 py-4">
+   <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <h1 data-template-id="app-title" class="canva-text font-bold text-lg text-emerald-200"></h1><button id="reset-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-800 text-emerald-100 hover:bg-emerald-700 transition-colors text-sm font-medium"> <i data-lucide="rotate-ccw" style="width:14px;height:14px"></i> Reset </button>
    </div>
   </header>
-  <main class="max-w-7xl mx-auto p-6">
-   <div class="grid lg:grid-cols-2 gap-8">
+  <main class="max-w-6xl mx-auto p-6">
+   <div class="grid lg:grid-cols-2 gap-6">
     <!-- Settings -->
-    <div class="space-y-5">
-     <section data-template-id="content-section" class="canva-section rounded-xl p-5 space-y-4">
-      <h2 data-template-id="content-title" class="canva-text font-semibold"></h2>
-      <div>
-       <label class="text-green-100 text-sm block mb-1">Content Type</label> <select id="content-type" class="w-full bg-green-950/40 border border-green-700/60 rounded-lg px-3 py-1.5 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50"> <option value="text">Text</option> <option value="image">Image</option> </select>
-      </div>
-      <div id="text-input-wrap">
-       <label class="text-green-100 text-sm block mb-1">Marquee Text</label> <input id="marquee-text" type="text" value="HTML marquee..." class="w-full bg-green-950/40 border border-green-700/60 rounded-lg px-3 py-2 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50">
-      </div>
-      <div id="image-input-wrap" class="hidden">
-       <label class="text-green-100 text-sm block mb-1">Image URL</label> <input id="marquee-img" type="text" value="" class="w-full bg-green-950/40 border border-green-700/60 rounded-lg px-3 py-2 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50"> <label class="text-green-100 text-sm block mb-1 mt-2">Alt Text</label> <input id="marquee-alt" type="text" value="Swimming fish" class="w-full bg-green-950/40 border border-green-700/60 rounded-lg px-3 py-2 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50">
-      </div>
-     </section>
-     <section data-template-id="behavior-section" class="canva-section rounded-xl p-5 space-y-4">
-      <h2 data-template-id="behavior-title" class="canva-text font-semibold"></h2>
-      <div class="grid grid-cols-2 gap-3">
+    <div class="space-y-4">
+     <section class="panel">
+      <h2 data-template-id="content-title" class="canva-text font-semibold text-emerald-100 mb-3"></h2>
+      <div class="space-y-3">
        <div>
-        <label class="text-green-100 text-sm block mb-1">Direction</label> <select id="direction" class="w-full bg-green-950/40 border border-green-700/60 rounded-lg px-3 py-1.5 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50"> <option value="left">Left</option> <option value="right">Right</option> <option value="up">Up</option> <option value="down">Down</option> </select>
+        <label class="field-label">Content Type</label> <select id="content-type" class="field-input"><option value="text">Text</option><option value="image">Image</option></select>
        </div>
-       <div>
-        <label class="text-green-100 text-sm block mb-1">Behavior</label> <select id="behavior" class="w-full bg-green-950/40 border border-green-700/60 rounded-lg px-3 py-1.5 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50"> <option value="scroll">Scroll</option> <option value="slide">Slide</option> <option value="alternate">Alternate (Bounce)</option> </select>
+       <div id="text-input-wrap">
+        <label class="field-label">Marquee Text</label> <input id="marquee-text" type="text" value="HTML marquee..." class="field-input">
        </div>
-      </div>
-      <div class="grid grid-cols-2 gap-3">
-       <div>
-        <label class="text-green-100 text-sm block mb-1">Scroll Delay (ms)</label> <input id="scroll-delay" type="number" value="85" min="1" class="w-full bg-green-950/40 border border-green-700/60 rounded px-2 py-1.5 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50">
-       </div>
-       <div>
-        <label class="text-green-100 text-sm block mb-1">Scroll Amount (px)</label> <input id="scroll-amount" type="number" value="6" min="1" class="w-full bg-green-950/40 border border-green-700/60 rounded px-2 py-1.5 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50">
-       </div>
-      </div>
-      <div>
-       <label class="text-green-100 text-sm block mb-1">Loop (-1 = infinite)</label> <input id="loop" type="number" value="-1" class="w-full bg-green-950/40 border border-green-700/60 rounded px-2 py-1.5 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50">
-      </div>
-     </section>
-     <section data-template-id="dimensions-section" class="canva-section rounded-xl p-5 space-y-4">
-      <h2 data-template-id="dimensions-title" class="canva-text font-semibold"></h2>
-      <div class="grid grid-cols-2 gap-3">
-       <div>
-        <label class="text-green-100 text-sm block mb-1">Width</label> <input id="m-width" type="text" value="100%" class="w-full bg-green-950/40 border border-green-700/60 rounded px-2 py-1.5 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50">
-       </div>
-       <div>
-        <label class="text-green-100 text-sm block mb-1">Height</label> <input id="m-height" type="text" value="" placeholder="auto" class="w-full bg-green-950/40 border border-green-700/60 rounded px-2 py-1.5 text-green-50 text-sm focus:outline-none focus:border-green-400 focus:ring-1 focus:ring-green-400/50">
+       <div id="image-input-wrap" class="hidden">
+        <label class="field-label">Image URL</label> <input id="marquee-img" type="text" value="" class="field-input"> <label class="field-label mt-2">Alt Text</label> <input id="marquee-alt" type="text" value="Swimming fish" class="field-input">
        </div>
       </div>
      </section>
-     <section data-template-id="colors-section" class="canva-section rounded-xl p-5 space-y-4">
-      <h2 data-template-id="colors-title" class="canva-text font-semibold"></h2>
+     <section class="panel">
+      <h2 data-template-id="behavior-title" class="canva-text font-semibold text-emerald-100 mb-3"></h2>
       <div class="grid grid-cols-2 gap-3">
-       <div>
-        <label class="text-green-100 text-sm block mb-1">Text Color</label> <input id="text-color" type="color" value="#330099" class="w-full h-9 rounded cursor-pointer bg-green-950/40 border border-green-700/60">
+       <div><label class="field-label">Direction</label><select id="direction" class="field-input"><option value="left">Left</option><option value="right">Right</option><option value="up">Up</option><option value="down">Down</option></select>
        </div>
-       <div>
-        <label class="text-green-100 text-sm block mb-1">Background</label> <input id="bg-color" type="color" value="#CCFFFF" class="w-full h-9 rounded cursor-pointer bg-green-950/40 border border-green-700/60">
+       <div><label class="field-label">Behavior</label><select id="behavior" class="field-input"><option value="scroll">Scroll</option><option value="slide">Slide</option><option value="alternate">Bounce</option></select>
+       </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3 mt-3">
+       <div><label class="field-label">Delay (ms)</label><input id="scroll-delay" type="number" value="85" min="1" class="field-input">
+       </div>
+       <div><label class="field-label">Amount (px)</label><input id="scroll-amount" type="number" value="6" min="1" class="field-input">
+       </div>
+      </div>
+      <div class="mt-3"><label class="field-label">Loop (-1 = infinite)</label><input id="loop" type="number" value="-1" class="field-input">
+      </div>
+     </section>
+     <section class="panel">
+      <h2 data-template-id="dimensions-title" class="canva-text font-semibold text-emerald-100 mb-3"></h2>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="field-label">Width</label><input id="m-width" type="text" value="100%" class="field-input">
+       </div>
+       <div><label class="field-label">Height</label><input id="m-height" type="text" value="" placeholder="auto" class="field-input">
        </div>
       </div>
      </section>
-     <section data-template-id="output-mode-section" class="canva-section rounded-xl p-5 space-y-4">
-      <h2 data-template-id="output-mode-title" class="canva-text font-semibold"></h2>
+     <section class="panel">
+      <h2 data-template-id="colors-title" class="canva-text font-semibold text-emerald-100 mb-3"></h2>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="field-label">Text Color</label><input id="text-color" type="color" value="#330099" class="field-input h-9 p-1 cursor-pointer">
+       </div>
+       <div><label class="field-label">Background</label><input id="bg-color" type="color" value="#CCFFFF" class="field-input h-9 p-1 cursor-pointer">
+       </div>
+      </div>
+     </section>
+     <section class="panel">
+      <h2 data-template-id="output-mode-title" class="canva-text font-semibold text-emerald-100 mb-3"></h2>
       <div class="flex gap-2">
        <button class="tab-btn active" data-mode="html">HTML Marquee</button> <button class="tab-btn" data-mode="css">CSS Marquee</button>
       </div>
      </section>
     </div><!-- Preview & Code -->
-    <div class="space-y-5">
-     <section data-template-id="preview-section" class="canva-section rounded-xl p-5">
-      <h2 data-template-id="preview-title" class="canva-text font-semibold mb-4"></h2>
-      <div id="preview-box" class="bg-green-950/40 rounded-lg p-4 min-h-[100px] border border-green-700/60 overflow-hidden"></div>
+    <div class="space-y-4">
+     <section class="panel">
+      <h2 data-template-id="preview-title" class="canva-text font-semibold text-emerald-100 mb-3"></h2>
+      <div id="preview-box" class="bg-black/30 rounded-lg p-4 min-h-[80px] border border-emerald-800/50 overflow-hidden"></div>
      </section>
-     <section data-template-id="code-section" class="canva-section rounded-xl p-5">
-      <h2 data-template-id="code-title" class="canva-text font-semibold mb-4"></h2>
-      <pre id="code-output" class="code-output bg-green-950 rounded-lg p-4 overflow-x-auto text-green-50 border border-green-700/60 min-h-[120px] whitespace-pre-wrap"></pre>
-      <div class="flex gap-3 mt-4">
-       <button id="copy-btn" class="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg text-sm font-medium transition-colors shadow-md hover:shadow-lg"> <i data-lucide="copy" style="width:14px;height:14px"></i> Copy Code </button> <button id="download-btn" class="flex items-center gap-2 px-4 py-2 bg-green-700/40 hover:bg-green-700/60 text-green-50 rounded-lg text-sm font-medium transition-colors border border-green-600/40"> <i data-lucide="download" style="width:14px;height:14px"></i> Download HTML </button>
+     <section class="panel">
+      <h2 data-template-id="code-title" class="canva-text font-semibold text-emerald-100 mb-3"></h2>
+      <pre id="code-output" class="code-output bg-black/40 rounded-lg p-4 overflow-x-auto text-emerald-200 border border-emerald-800/50 min-h-[100px] whitespace-pre-wrap"></pre>
+      <div class="flex gap-3 mt-3">
+       <button id="copy-btn" class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-medium transition-colors"> <i data-lucide="copy" style="width:14px;height:14px"></i> Copy </button> <button id="download-btn" class="flex items-center gap-2 px-4 py-2 bg-emerald-800 hover:bg-emerald-700 text-emerald-100 rounded-lg text-sm font-medium transition-colors border border-emerald-700"> <i data-lucide="download" style="width:14px;height:14px"></i> Download </button>
       </div>
-     </section><!-- Examples -->
-     <section data-template-id="examples-section" class="canva-section rounded-xl p-5 space-y-4">
-      <h2 data-template-id="examples-title" class="canva-text font-semibold"></h2>
-      <h3 data-template-id="ex-html-title" class="canva-text font-semibold text-sm"></h3>
-      <div class="bg-green-950/40 rounded p-3 border border-green-700/60 overflow-hidden">
-       <marquee>
-        HTML marquee — the classic scrolling element
-       </marquee>
+     </section>
+     <section class="panel">
+      <h2 data-template-id="examples-title" class="canva-text font-semibold text-emerald-100 mb-3"></h2>
+      <div class="space-y-3 text-sm">
+       <div>
+        <p class="text-emerald-300 text-xs font-medium mb-1">Text Scroll</p>
+        <div class="bg-black/30 rounded p-2 border border-emerald-800/40 overflow-hidden">
+         <marquee scrollamount="4" style="color:#330099">
+          Scrolling text moves continuously
+         </marquee>
+        </div>
+       </div>
+       <div>
+        <p class="text-emerald-300 text-xs font-medium mb-1">Text Slide</p>
+        <div class="bg-black/30 rounded p-2 border border-emerald-800/40 overflow-hidden">
+         <marquee behavior="slide" style="color:#330099">
+          Slide-in stops at edge
+         </marquee>
+        </div>
+       </div>
+       <div>
+        <p class="text-emerald-300 text-xs font-medium mb-1">Text Bounce</p>
+        <div class="bg-black/30 rounded p-2 border border-emerald-800/40 overflow-hidden">
+         <marquee behavior="alternate" style="color:#330099">
+          Bouncing back and forth
+         </marquee>
+        </div>
+       </div>
+       <div>
+        <p class="text-emerald-300 text-xs font-medium mb-1">Image Scroll</p>
+        <div class="bg-black/30 rounded p-2 border border-emerald-800/40 overflow-hidden">
+         <marquee scrollamount="4"><img data-template-id="ex-scroll-img" class="canva-image" style="height:48px" loading="lazy">
+         </marquee>
+        </div>
+       </div>
+       <div>
+        <p class="text-emerald-300 text-xs font-medium mb-1">Image Slide</p>
+        <div class="bg-black/30 rounded p-2 border border-emerald-800/40 overflow-hidden">
+         <marquee behavior="slide"><img data-template-id="ex-scroll-img" class="canva-image" style="height:48px" loading="lazy">
+         </marquee>
+        </div>
+       </div>
+       <div>
+        <p class="text-emerald-300 text-xs font-medium mb-1">Image Bounce</p>
+        <div class="bg-black/30 rounded p-2 border border-emerald-800/40 overflow-hidden">
+         <marquee behavior="alternate" scrollamount="3"><img data-template-id="ex-scroll-img" class="canva-image" style="height:48px" loading="lazy">
+         </marquee>
+        </div>
+       </div>
+       <div>
+        <p class="text-emerald-300 text-xs font-medium mb-1">CSS Animation</p>
+        <div class="bg-black/30 rounded p-2 border border-emerald-800/40 overflow-hidden">
+         <style>.css-demo{overflow:hidden;animation:marquee-css 8s linear infinite}.marquee-css{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}</style>
+         <div class="css-demo" style="color:#330099">
+          <span style="display:inline-block">CSS marquee using @keyframes animation</span>
+         </div>
+        </div>
+       </div>
+       <div>
+        <p class="text-emerald-300 text-xs font-medium mb-1">Vertical Scroll</p>
+        <div class="bg-black/30 rounded p-2 border border-emerald-800/40 overflow-hidden" style="height:80px">
+         <marquee direction="up" scrollamount="2" style="color:#330099;height:100%">
+          Vertical<br>
+          text<br>
+          scrolling<br>
+          upwards
+         </marquee>
+        </div>
+       </div>
       </div>
-      <h3 data-template-id="ex-css-title" class="canva-text font-semibold text-sm mt-3"></h3>
-      <div class="bg-green-950/40 rounded p-3 border border-green-700/60 overflow-hidden">
-       <span class="css-scroll text-green-300">CSS marquee using @keyframes animation</span>
-      </div>
-      <h3 data-template-id="ex-scroll-title" class="canva-text font-semibold text-sm mt-3"></h3>
-      <div class="bg-green-950/40 rounded p-3 border border-green-700/60 overflow-hidden">
-       <marquee scrollamount="4">
-        Scrolling text moves continuously across the page
-       </marquee>
-      </div>
-      <h3 data-template-id="ex-slidein-title" class="canva-text font-semibold text-sm mt-3"></h3>
-      <div class="bg-green-950/40 rounded p-3 border border-green-700/60 overflow-hidden">
-       <marquee behavior="slide">
-        Slide-in text stops when it reaches the edge
-       </marquee>
-      </div>
-      <h3 data-template-id="ex-bounce-title" class="canva-text font-semibold text-sm mt-3"></h3>
-      <div class="bg-green-950/40 rounded p-3 border border-green-700/60 overflow-hidden">
-       <marquee behavior="alternate">
-        Bouncing text goes back and forth
-       </marquee>
-      </div>
-      <h3 data-template-id="ex-scroll-img-title" class="canva-text font-semibold text-sm mt-3"></h3>
-      <div class="bg-slate-800 rounded p-3 border border-slate-700 overflow-hidden">
-       <marquee><img data-template-id="ex-scroll-img" class="canva-image" style="height:60px">
-       </marquee>
-      </div>
-      <h3 data-template-id="ex-slidein-img-title" class="canva-text font-semibold text-sm mt-3"></h3>
-      <div class="bg-slate-800 rounded p-3 border border-slate-700 overflow-hidden">
-       <marquee behavior="slide"><img data-template-id="ex-slidein-img" class="canva-image" style="height:60px">
-       </marquee>
-      </div>
-      <h3 data-template-id="ex-bounce-img-title" class="canva-text font-semibold text-sm mt-3"></h3>
-      <div class="bg-slate-800 rounded p-3 border border-slate-700 overflow-hidden">
-       <marquee behavior="alternate"><img data-template-id="ex-bounce-img" class="canva-image" style="height:60px">
-       </marquee>
-      </div>
-     </section><!-- Docs -->
-     <section data-template-id="docs-section" class="canva-section rounded-xl p-5 space-y-4">
-      <h2 data-template-id="docs-title" class="canva-text font-semibold"></h2>
-      <p data-template-id="docs-intro" class="canva-text text-sm leading-relaxed"></p>
-      <h3 data-template-id="docs-html-custom-title" class="canva-text font-semibold"></h3>
-      <p data-template-id="docs-html-custom-text" class="canva-text text-sm leading-relaxed"></p>
-      <h3 data-template-id="docs-css-title" class="canva-text font-semibold"></h3>
-      <p data-template-id="docs-css-text" class="canva-text text-sm leading-relaxed"></p>
+     </section>
+     <section class="panel">
+      <h2 data-template-id="docs-title" class="canva-text font-semibold text-emerald-100 mb-3"></h2>
+      <p data-template-id="docs-intro" class="canva-text text-sm text-emerald-300 leading-relaxed"></p>
      </section>
     </div>
    </div>
-   <footer class="mt-10 border-t border-green-700/40 pt-6 pb-4">
-    <p data-template-id="footer-text" class="canva-text text-center text-xs"></p>
+   <footer class="mt-8 border-t border-emerald-800/40 pt-4">
+    <p data-template-id="footer-text" class="canva-text text-center text-xs text-emerald-400"></p>
    </footer>
   </main>
   <script src="/_sdk/editing_sdk.js"></script>
@@ -187,7 +189,6 @@
     const $ = id => document.getElementById(id);
     let outputMode = 'html';
 
-    // Tab switching
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -223,9 +224,7 @@
 
       let content;
       if (isImage) {
-        const src = $('marquee-img').value;
-        const alt = $('marquee-alt').value;
-        content = `<img src="${src}" alt="${alt}" height="60">`;
+        content = `<img src="${$('marquee-img').value}" alt="${$('marquee-alt').value}" height="60">`;
       } else {
         content = $('marquee-text').value;
       }
@@ -242,44 +241,28 @@
         if (height) attrs.push(`height="${height}"`);
         attrs.push(`bgcolor="${bgColor}"`);
         const style = isImage ? '' : ` style="color:${textColor}"`;
-        const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
-        code = `<marquee${attrStr}${style}>${content}</marquee>`;
+        code = `<marquee${attrs.length ? ' ' + attrs.join(' ') : ''}${style}>${content}</marquee>`;
       } else {
-        // CSS marquee output
         let animName = 'marquee-scroll';
         let duration = Math.max(1, Math.round(200 / parseInt(amount || 6))) + 's';
         let iteration = loop === '-1' ? 'infinite' : loop;
-        let direction = 'normal';
         let fillMode = '';
-
-        if (beh === 'slide') {
-          animName = 'marquee-slide';
-          iteration = '1';
-          fillMode = '\n  animation-fill-mode: forwards;';
-        } else if (beh === 'alternate') {
-          animName = 'marquee-bounce';
-          iteration = loop === '-1' ? 'infinite' : loop;
-        }
-
-        // Determine transform axis
         let fromT, toT;
-        if (dir === 'left') { fromT = 'translateX(100%)'; toT = beh === 'slide' ? 'translateX(0)' : 'translateX(-100%)'; }
-        else if (dir === 'right') { fromT = 'translateX(-100%)'; toT = beh === 'slide' ? 'translateX(0)' : 'translateX(100%)'; }
-        else if (dir === 'up') { fromT = 'translateY(100%)'; toT = beh === 'slide' ? 'translateY(0)' : 'translateY(-100%)'; }
-        else { fromT = 'translateY(-100%)'; toT = beh === 'slide' ? 'translateY(0)' : 'translateY(100%)'; }
+
+        if (beh === 'slide') { animName = 'marquee-slide'; iteration = '1'; fillMode = '\n  animation-fill-mode: forwards;'; }
+        else if (beh === 'alternate') { animName = 'marquee-bounce'; }
 
         if (beh === 'alternate') {
-          fromT = dir === 'up' || dir === 'down' ? 'translateY(0)' : 'translateX(0)';
-          toT = dir === 'up' || dir === 'down' ? 'translateY(calc(100% - 60px))' : 'translateX(calc(100% - 200px))';
+          fromT = (dir === 'up' || dir === 'down') ? 'translateY(0)' : 'translateX(0)';
+          toT = (dir === 'up' || dir === 'down') ? 'translateY(calc(100% - 60px))' : 'translateX(calc(100% - 200px))';
+        } else {
+          if (dir === 'left') { fromT = 'translateX(100%)'; toT = beh === 'slide' ? 'translateX(0)' : 'translateX(-100%)'; }
+          else if (dir === 'right') { fromT = 'translateX(-100%)'; toT = beh === 'slide' ? 'translateX(0)' : 'translateX(100%)'; }
+          else if (dir === 'up') { fromT = 'translateY(100%)'; toT = beh === 'slide' ? 'translateY(0)' : 'translateY(-100%)'; }
+          else { fromT = 'translateY(-100%)'; toT = beh === 'slide' ? 'translateY(0)' : 'translateY(100%)'; }
         }
 
-        const wrapStyle = [
-          `overflow: hidden`,
-          `background: ${bgColor}`,
-          width ? `width: ${width}` : null,
-          height ? `height: ${height}` : null
-        ].filter(Boolean).join(';\n  ');
-
+        const wrapStyle = [`overflow: hidden`, `background: ${bgColor}`, width ? `width: ${width}` : null, height ? `height: ${height}` : null].filter(Boolean).join(';\n  ');
         const itemStyle = isImage ? '' : `\n  color: ${textColor};`;
 
         code = `<style>\n@keyframes ${animName} {\n  0% { transform: ${fromT}; }\n  100% { transform: ${toT}; }\n}\n.marquee-wrap {\n  ${wrapStyle};\n}\n.marquee-item {\n  display: inline-block;${itemStyle}\n  animation: ${animName} ${duration} linear ${iteration};${fillMode}\n}\n</style>\n\n<div class="marquee-wrap">\n  <span class="marquee-item">${content}</span>\n</div>`;
@@ -287,15 +270,11 @@
 
       $('code-output').textContent = code;
 
-      // Live preview
       if (outputMode === 'html') {
         $('preview-box').innerHTML = code;
       } else {
-        // For CSS mode, render inline
         const previewContent = isImage ? content : `<span style="color:${textColor}">${content}</span>`;
-        let animClass = beh === 'slide' ? 'css-slide' : beh === 'alternate' ? 'css-bounce' : 'css-scroll';
-        if (isImage) animClass += '-img';
-        $('preview-box').innerHTML = `<div style="overflow:hidden;background:${bgColor};padding:8px;border-radius:6px;${height ? 'height:'+height+';' : ''}"><span class="${animClass}">${previewContent}</span></div>`;
+        $('preview-box').innerHTML = `<div style="overflow:hidden;background:${bgColor};padding:8px;border-radius:6px;${height ? 'height:'+height+';' : ''}"><span style="display:inline-block;animation:marquee-scroll 8s linear infinite">${previewContent}</span></div>`;
       }
     }
 
@@ -304,8 +283,7 @@
     });
 
     $('download-btn').addEventListener('click', () => {
-      const code = $('code-output').textContent;
-      const blob = new Blob([`<!DOCTYPE html>\n<html><head><meta charset="UTF-8"></head><body>\n${code}\n</body></html>`], { type: 'text/html' });
+      const blob = new Blob([`<!DOCTYPE html>\n<html><head><meta charset="UTF-8"></head><body>\n${$('code-output').textContent}\n</body></html>`], { type: 'text/html' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = 'marquee.html';
@@ -339,5 +317,5 @@
 
     update();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0561a5b9fe89a5e',t:'MTc4MDM5OTU4NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a05637886aeeaa12',t:'MTc4MDQwMDc3OQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
