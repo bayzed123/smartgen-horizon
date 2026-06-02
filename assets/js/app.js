@@ -1,8 +1,14 @@
+document.addEventListener('DOMContentLoaded', () => {
+    injectNavbar();
+    injectFooter();
+    initTheme();
+    initAccordion();
+});
+
 function injectNavbar() {
     const header = document.getElementById('main-header');
     if (!header) return;
 
-    // Beta Testing Navbar with Correct GitHub Pages Paths
     header.innerHTML = `
         <div class="container">
             <div class="header-content">
@@ -49,43 +55,52 @@ function injectNavbar() {
         <div id="sidebar-overlay" class="sidebar-overlay"></div>
     `;
 
-    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+    // Initialize Theme Toggle
+    const themeBtn = document.getElementById('theme-toggle');
+    if (themeBtn) {
+        themeBtn.addEventListener('click', toggleTheme);
+    }
     
+    // Sidebar Navigation Logic
     const menuToggle = document.getElementById('mobile-menu-toggle');
     const sidebar = document.getElementById('mobile-sidebar');
     const sidebarClose = document.getElementById('sidebar-close');
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     
-    // Toggle sidebar
-    menuToggle.addEventListener('click', () => {
-        sidebar.classList.add('active');
-        sidebarOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
-
-    // Close sidebar
-    const closeSidebar = () => {
-        sidebar.classList.remove('active');
-        sidebarOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-    };
-
-    sidebarClose.addEventListener('click', closeSidebar);
-    sidebarOverlay.addEventListener('click', closeSidebar);
-
-    // Close sidebar when clicking a link
-    sidebar.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            closeSidebar();
+    if (menuToggle && sidebar && sidebarOverlay && sidebarClose) {
+        // Open sidebar
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
+            sidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Stop background scrolling
         });
-    });
+
+        // Close sidebar function
+        const closeSidebar = () => {
+            sidebar.classList.remove('active');
+            sidebarOverlay.classList.remove('active');
+            document.body.style.overflow = ''; // Restore background scrolling
+        };
+
+        // Close sidebar on Close button click
+        sidebarClose.addEventListener('click', closeSidebar);
+        
+        // Close sidebar on Overlay click
+        sidebarOverlay.addEventListener('click', closeSidebar);
+
+        // Close sidebar when clicking any link inside it
+        sidebar.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                closeSidebar();
+            });
+        });
+    }
 }
 
 function injectFooter() {
     const footer = document.getElementById('main-footer');
     if (!footer) return;
 
-    // Beta Testing Footer with Correct GitHub Pages Paths
     footer.innerHTML = `
         <div class="container">
             <div class="footer-top" style="justify-content: space-between;">
@@ -120,12 +135,62 @@ function injectFooter() {
                     <p>&copy; 2026 SmartGen. Developed by <a href="https://sayadbayezid.com" target="_blank" rel="noopener noreferrer" class="developer-link">Sayad Md Bayezid Hosan</a></p>
                 </div>
                 <div class="footer-social-icons">
-                    <a href="https://github.com/bayzed123" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Visit our GitHub Repository"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
-                    <a href="https://linkedin.com/in/sayadbayezid" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Visit our LinkedIn Profile"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.475-2.236-1.986-2.236-1.081 0-1.722.731-2.004 1.438-.103.25-.129.599-.129.948v5.419h-3.554s.05-8.736 0-9.646h3.554v1.364c.429-.646 1.199-1.538 2.914-1.538 2.127 0 3.72 1.395 3.72 4.393v5.427zM5.337 8.855c-1.144 0-1.915-.758-1.915-1.704 0-.951.77-1.704 1.963-1.704 1.193 0 1.915.753 1.929 1.704 0 .946-.736 1.704-1.977 1.704zm1.582 11.597H3.635V9.859h3.284v10.593zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                    <a href="https://github.com/bayzed123/smartgen-horizon" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Visit our GitHub Repository"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg></a>
                 </div>
             </div>
         </div>
     `;
 
     initFooterAccordion();
+}
+
+function initFooterAccordion() {
+    const triggers = document.querySelectorAll('.footer-accordion-trigger');
+    
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', () => {
+            if (window.innerWidth < 768) {
+                const column = trigger.parentElement;
+                const isActive = column.classList.contains('active');
+                
+                document.querySelectorAll('.footer-column').forEach(otherCol => {
+                    if (otherCol !== column) {
+                        otherCol.classList.remove('active');
+                    }
+                });
+                
+                column.classList.toggle('active');
+            }
+        });
+    });
+}
+
+function initAccordion() {
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    
+    accordionHeaders.forEach(header => {
+        header.addEventListener('click', () => {
+            const item = header.parentElement;
+            
+            document.querySelectorAll('.accordion-item').forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                }
+            });
+            
+            item.classList.toggle('active');
+        });
+    });
+}
+
+function initTheme() {
+    const theme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', theme);
+}
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
 }
