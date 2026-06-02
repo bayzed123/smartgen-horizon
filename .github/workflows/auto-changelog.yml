@@ -5,9 +5,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - 'data/changelog.json'
-      - 'index.html'
-      - 'assets/js/search-data.js'
+      - 'data/**/*.hash'
       - '.github/workflows/**'
 
 jobs:
@@ -15,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - name: checkout repository
         uses: actions/checkout@v4
@@ -26,7 +25,18 @@ jobs:
         with:
           node-version: '20'
 
-      - name: inject tools to homepage
+      # 🔥 scan ALL HTML files
+      - name: scan html files
+        run: |
+          find . -type f -name "*.html" \
+          ! -path "./node_modules/*" \
+          ! -path "./.github/*" > html-files.txt
+
+          echo "HTML files found:"
+          cat html-files.txt
+
+      # 🔥 inject safely (no duplicate)
+      - name: inject tools system
         run: node scripts/auto-inject-tools.js
 
       - name: extract commit info
@@ -40,20 +50,28 @@ jobs:
         run: |
           FILE="data/changelog.json"
           if [ ! -f "$FILE" ]; then echo "[]" > "$FILE"; fi
-          
+
           NEW_ENTRY=$(jq -n \
             --arg title "${{ steps.commit_info.outputs.TITLE }}" \
             --arg date "${{ steps.commit_info.outputs.DATE }}" \
             --arg desc "${{ steps.commit_info.outputs.DESC }}" \
-            '{title: $title, date: $date, description: (if $desc == "" then "platform improvement and optimization." else $desc end)}')
-          
+            '{title: $title, date: $date, description: (if $desc == "" then "system update" else $desc end)}')
+
           jq ". = [$NEW_ENTRY] + ." "$FILE" > temp.json && mv temp.json "$FILE"
 
-      - name: commit and push
+      # 🔥 SAFE COMMIT (NO DUPLICATE LOOP)
+      - name: commit changes safely
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/changelog.json index.html assets/js/search-data.js
-          git commit -m "chore: update changelog and tools grid [skip ci]" || exit 0
+
+          git add .
+
+          if git diff --cached --quiet; then
+            echo "No changes - skipping commit"
+            exit 0
+          fi
+
+          git commit -m "auto-update: system sync [skip ci]"
           git pull --rebase origin main
           git push
