@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartGen HTML Link Generator</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Mono&amp;display=swap" rel="stylesheet">
+  <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .code-output { font-family: 'Space Mono', monospace; font-size: 12px; }
+        .rel-btn.active { background: #0ea5e9; color: #fff; }
+        .tab-active { background: #0f172a; color: #38bdf8; }
+        .toast { animation: slideIn 0.3s ease, fadeOut 0.3s ease 2s forwards; }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; } }
+        #link-preview a { transition: all 0.2s; }
+    </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ <script src="/_sdk/telemetry_sdk.js"></script></head>
+ <body data-template-id="__page-root" class="min-h-screen">
+  <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
+  <header class="border-b border-slate-700/50 px-6 py-4">
+   <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <h1 data-template-id="app-title" class="canva-text font-bold"></h1><button id="reset-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-600 text-sm"> <i data-lucide="rotate-ccw" style="width:14px;height:14px"></i> Reset </button>
+   </div>
+  </header>
+  <main class="max-w-7xl mx-auto p-6">
+   <div class="grid lg:grid-cols-2 gap-8"><!-- Settings -->
+    <div class="space-y-5"><!-- Link Settings -->
+     <section data-template-id="link-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="link-title" class="canva-text font-semibold"></h2>
+      <div><label for="dest-url" class="text-slate-300 text-sm block mb-1">Destination URL</label> <input id="dest-url" type="url" value="https://www.quackit.com" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400">
+      </div>
+      <div><label for="anchor-text" class="text-slate-300 text-sm block mb-1">Anchor Text</label> <input id="anchor-text" type="text" value="Sample Link..." class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400">
+      </div>
+      <div><label for="link-target" class="text-slate-300 text-sm block mb-1">Link Target</label> <select id="link-target" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm"> <option value="">(none)</option> <option value="_blank" selected>_blank</option> <option value="_self">_self</option> <option value="_parent">_parent</option> <option value="_top">_top</option> </select>
+      </div>
+      <div><label class="text-slate-300 text-sm block mb-2">rel Attribute</label>
+       <div class="flex flex-wrap gap-1" id="rel-buttons"><button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="nofollow">nofollow</button> <button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="noopener">noopener</button> <button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="noreferrer">noreferrer</button> <button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="external">external</button> <button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="bookmark">bookmark</button> <button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="author">author</button> <button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="help">help</button> <button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="license">license</button> <button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="tag">tag</button> <button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="sponsored">sponsored</button> <button class="rel-btn rounded px-2 py-1 bg-slate-700 text-slate-300 text-xs hover:bg-slate-600" data-rel="ugc">ugc</button>
+       </div>
+      </div>
+     </section><!-- Styles -->
+     <section data-template-id="styles-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="styles-title" class="canva-text font-semibold"></h2>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="text-slate-300 text-sm block mb-1">Text Size</label>
+        <div class="flex gap-1"><input id="txt-size" type="number" value="40" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1.5 text-slate-200 text-sm"> <select id="txt-size-unit" class="bg-slate-800 border border-slate-600 rounded px-1 text-slate-200 text-xs"> <optgroup label="Absolute"> <option>px</option><option>cm</option><option>mm</option><option>in</option><option>pt</option><option>pc</option> </optgroup> <optgroup label="Font-Relative"> <option>em</option><option>rem</option><option>ex</option><option>ch</option> </optgroup> <optgroup label="Viewport"> <option>vw</option><option>vh</option><option>vmin</option><option>vmax</option><option>%</option> </optgroup> </select>
+        </div>
+       </div>
+       <div><label for="txt-decoration" class="text-slate-300 text-sm block mb-1">Text-Decoration</label> <select id="txt-decoration" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-slate-200 text-sm"> <option value="none">none</option> <option value="underline">underline</option> <option value="overline">overline</option> <option value="line-through">line-through</option> <option value="underline overline">underline overline</option> <option value="blink">blink</option> </select>
+       </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="text-slate-300 text-sm block mb-1">Background Color</label> <input id="bg-color" type="color" value="#CCFF00" class="w-full h-9 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Link Color</label> <input id="link-color" type="color" value="#006600" class="w-full h-9 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+       <div><label class="text-slate-300 text-sm block mb-1">Visited Color</label> <input id="visited-color" type="color" value="#009900" class="w-full h-9 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Hover Color</label> <input id="hover-color" type="color" value="#0099CC" class="w-full h-9 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Active Color</label> <input id="active-color" type="color" value="#FF9900" class="w-full h-9 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+      </div>
+     </section>
+    </div><!-- Preview & Code -->
+    <div class="space-y-5">
+     <section data-template-id="preview-section" class="canva-section rounded-xl p-5">
+      <h2 data-template-id="preview-title" class="canva-text font-semibold mb-4"></h2>
+      <div id="link-preview" class="bg-slate-800/50 rounded-lg p-6 flex items-center justify-center min-h-[100px] border border-slate-700">
+      </div>
+     </section>
+     <section data-template-id="code-section" class="canva-section rounded-xl p-5">
+      <h2 data-template-id="code-title" class="canva-text font-semibold mb-4"></h2>
+      <div class="flex gap-1 mb-3"><button class="code-tab tab-active px-4 py-1.5 rounded-lg text-sm font-medium" data-tab="full">Full Code</button> <button class="code-tab px-4 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300" data-tab="css">CSS</button> <button class="code-tab px-4 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300" data-tab="html">HTML</button>
+      </div>
+      <pre id="code-output" class="code-output bg-slate-900 rounded-lg p-4 overflow-x-auto text-slate-300 border border-slate-700 min-h-[160px] whitespace-pre-wrap"></pre>
+      <div class="flex gap-3 mt-4"><button id="copy-btn" class="flex items-center gap-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg text-sm font-medium transition-colors"> <i data-lucide="copy" style="width:14px;height:14px"></i> Copy Code </button> <button id="download-btn" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-sm font-medium transition-colors"> <i data-lucide="download" style="width:14px;height:14px"></i> Download HTML </button>
+      </div>
+     </section>
+     <section data-template-id="docs-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="docs-title" class="canva-text font-semibold"></h2>
+      <p data-template-id="docs-intro" class="canva-text text-sm leading-relaxed"></p>
+      <h3 data-template-id="docs-css-title" class="canva-text font-semibold"></h3>
+      <p data-template-id="docs-css-text" class="canva-text text-sm leading-relaxed"></p>
+     </section>
+    </div>
+   </div>
+   <footer class="mt-10 border-t border-slate-700/50 pt-6 pb-4">
+    <p data-template-id="footer-text" class="canva-text text-center text-xs"></p>
+   </footer>
+  </main>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+        lucide.createIcons();
+
+        let currentTab = 'full';
+        const relSelected = new Set();
+
+        // Rel buttons
+        document.querySelectorAll('.rel-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const r = btn.dataset.rel;
+                if (relSelected.has(r)) { relSelected.delete(r); btn.classList.remove('active'); }
+                else { relSelected.add(r); btn.classList.add('active'); }
+                update();
+            });
+        });
+
+        // Code tabs
+        document.querySelectorAll('.code-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.code-tab').forEach(t => t.className = 'code-tab px-4 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300');
+                tab.className = 'code-tab tab-active px-4 py-1.5 rounded-lg text-sm font-medium';
+                currentTab = tab.dataset.tab;
+                update();
+            });
+        });
+
+        // All inputs
+        document.querySelectorAll('input, select').forEach(i => { i.addEventListener('input', update); i.addEventListener('change', update); });
+
+        function val(id) { return document.getElementById(id).value; }
+
+        function update() {
+            const url = val('dest-url');
+            const text = val('anchor-text');
+            const target = val('link-target');
+            const size = val('txt-size');
+            const sizeU = val('txt-size-unit');
+            const decoration = val('txt-decoration');
+            const bgColor = val('bg-color');
+            const linkColor = val('link-color');
+            const visitedColor = val('visited-color');
+            const hoverColor = val('hover-color');
+            const activeColor = val('active-color');
+            const relVal = [...relSelected].join(' ');
+
+            // Preview
+            const preview = document.getElementById('link-preview');
+            const styleTag = document.getElementById('preview-style');
+            if (styleTag) styleTag.remove();
+            const s = document.createElement('style');
+            s.id = 'preview-style';
+            s.textContent = `
+                #link-preview a.prev-link:link { font-size:${size}${sizeU};text-decoration:${decoration};color:${linkColor};background-color:${bgColor}; }
+                #link-preview a.prev-link:visited { color:${visitedColor}; }
+                #link-preview a.prev-link:hover { color:${hoverColor}; }
+                #link-preview a.prev-link:active { color:${activeColor}; }
+            `;
+            document.head.appendChild(s);
+            preview.innerHTML = `<a class="prev-link" href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+
+            // Generate CSS
+            let css = `<!-- CSS Code -->\n<style type="text/css">\na.GeneratedLink:link {\nfont-size:${size}${sizeU};text-decoration:${decoration};color:${linkColor};background-color:${bgColor};\n}\na.GeneratedLink:visited {\ncolor:${visitedColor};\n}\na.GeneratedLink:hover {\ncolor:${hoverColor};\n}\na.GeneratedLink:active {\ncolor:${activeColor};\n}\n</style>`;
+
+            // Generate HTML
+            let attrs = `class="GeneratedLink" href="${url}"`;
+            if (target) attrs += ` target="${target}"`;
+            if (relVal) attrs += ` rel="${relVal}"`;
+            let html = `<!-- HTML Code -->\n<a ${attrs}>${text}</a>`;
+
+            const full = `${css}\n\n${html}`;
+
+            const output = document.getElementById('code-output');
+            if (currentTab === 'css') output.textContent = css;
+            else if (currentTab === 'html') output.textContent = html;
+            else output.textContent = full;
+        }
+
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            navigator.clipboard.writeText(document.getElementById('code-output').textContent).then(() => showToast('Copied!'));
+        });
+
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const code = document.getElementById('code-output').textContent;
+            const blob = new Blob([`<!DOCTYPE html>\n<html><head></head><body>\n${code}\n</body></html>`], { type: 'text/html' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'link.html'; a.click();
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            document.getElementById('dest-url').value = 'https://www.quackit.com';
+            document.getElementById('anchor-text').value = 'Sample Link...';
+            document.getElementById('link-target').value = '_blank';
+            document.getElementById('txt-size').value = '40';
+            document.getElementById('txt-size-unit').value = 'px';
+            document.getElementById('txt-decoration').value = 'none';
+            document.getElementById('bg-color').value = '#CCFF00';
+            document.getElementById('link-color').value = '#006600';
+            document.getElementById('visited-color').value = '#009900';
+            document.getElementById('hover-color').value = '#0099CC';
+            document.getElementById('active-color').value = '#FF9900';
+            relSelected.clear();
+            document.querySelectorAll('.rel-btn').forEach(b => b.classList.remove('active'));
+            update();
+        });
+
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg';
+            t.textContent = msg;
+            document.getElementById('toast-container').appendChild(t);
+            setTimeout(() => t.remove(), 2500);
+        }
+
+        update();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0558d424e1bf7fa',t:'MTc4MDM5MzgwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
