@@ -1,6 +1,7 @@
 ./html-master-ready-code-free/image-generator-code.html
 ./html-master-ready-code-free/css3-gradient-generator.html
 ./html-master-ready-code-free/table-generator.html
+./html-master-ready-code-free/marquee-generator.html
 ./html-master-ready-code-free/html-text-generator.html
 ./updates/index.html
 ./txt-to-markdown-generate/index.html
