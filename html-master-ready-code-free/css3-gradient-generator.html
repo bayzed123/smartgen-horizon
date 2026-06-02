@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartGen Gradient Generator</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Mono&amp;display=swap" rel="stylesheet">
+  <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .code-output { font-family: 'Space Mono', monospace; font-size: 12px; }
+        .dir-btn.active { background: #0ea5e9; color: #fff; }
+        .unit-chip { cursor: pointer; transition: background 0.15s; }
+        .unit-chip:hover { background: #334155; }
+        .unit-chip.selected { background: #0ea5e9; color: #fff; }
+        .toast { animation: slideIn 0.3s ease, fadeOut 0.3s ease 2s forwards; }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; } }
+        .tab-active { background: #0f172a; color: #38bdf8; }
+    </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ <script src="/_sdk/telemetry_sdk.js"></script></head>
+ <body data-template-id="__page-root" class="min-h-screen">
+  <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
+  <header class="border-b border-slate-700/50 px-6 py-4">
+   <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <h1 data-template-id="app-title" class="canva-text font-bold"></h1><button id="reset-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-600 text-sm"> <i data-lucide="rotate-ccw" style="width:14px;height:14px"></i> Reset </button>
+   </div>
+  </header>
+  <main class="max-w-7xl mx-auto p-6">
+   <div class="grid lg:grid-cols-2 gap-8"><!-- Settings -->
+    <div class="space-y-5"><!-- Gradient -->
+     <section data-template-id="gradient-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="gradient-title" class="canva-text font-semibold"></h2>
+      <div class="grid grid-cols-2 gap-4">
+       <div><label class="text-slate-300 text-sm block mb-1">Color 1</label> <input id="color1" type="color" value="#FFFF00" class="w-full h-10 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Color 2</label> <input id="color2" type="color" value="#FF9900" class="w-full h-10 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+      </div><!-- Direction -->
+      <div><label class="text-slate-300 text-sm block mb-2">Direction</label>
+       <div class="grid grid-cols-8 gap-1"><button class="dir-btn rounded px-2 py-1.5 bg-slate-700 text-slate-300 text-sm hover:bg-slate-600" data-dir="to top">↑</button> <button class="dir-btn rounded px-2 py-1.5 bg-slate-700 text-slate-300 text-sm hover:bg-slate-600" data-dir="to top right">↗</button> <button class="dir-btn active rounded px-2 py-1.5 text-sm" data-dir="to right">→</button> <button class="dir-btn rounded px-2 py-1.5 bg-slate-700 text-slate-300 text-sm hover:bg-slate-600" data-dir="to bottom right">↘</button> <button class="dir-btn rounded px-2 py-1.5 bg-slate-700 text-slate-300 text-sm hover:bg-slate-600" data-dir="to bottom">↓</button> <button class="dir-btn rounded px-2 py-1.5 bg-slate-700 text-slate-300 text-sm hover:bg-slate-600" data-dir="to bottom left">↙</button> <button class="dir-btn rounded px-2 py-1.5 bg-slate-700 text-slate-300 text-sm hover:bg-slate-600" data-dir="to left">←</button> <button class="dir-btn rounded px-2 py-1.5 bg-slate-700 text-slate-300 text-sm hover:bg-slate-600" data-dir="to top left">↖</button>
+       </div>
+      </div><label class="flex items-center gap-2 text-slate-300 text-sm"> <input id="prefixes" type="checkbox" checked class="accent-sky-400"> Add browser prefixes </label>
+     </section><!-- Text -->
+     <section data-template-id="text-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="text-title" class="canva-text font-semibold"></h2>
+      <div><label class="text-slate-300 text-sm block mb-1">Text</label> <input id="txt-content" type="text" value="Optional text..." class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="text-slate-300 text-sm block mb-1">Font</label> <select id="txt-font" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm"> <option>Arial</option><option>Verdana</option><option>Georgia</option><option>Times New Roman</option><option>Comic Sans MS</option><option>Courier New</option><option>Impact</option><option>Trebuchet MS</option> </select>
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Size</label>
+        <div class="flex gap-1"><input id="txt-size" type="number" value="2" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-2 py-2 text-slate-200 text-sm"> <select id="txt-size-unit" class="bg-slate-800 border border-slate-600 rounded-lg px-1 text-slate-200 text-xs"> <option>em</option><option>px</option><option>rem</option><option>pt</option><option>%</option><option>vw</option> </select>
+        </div>
+       </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="text-slate-300 text-sm block mb-1">Line-Height</label>
+        <div class="flex gap-1"><input id="txt-lh" type="number" value="1.3" step="0.1" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-2 py-2 text-slate-200 text-sm"> <select id="txt-lh-unit" class="bg-slate-800 border border-slate-600 rounded-lg px-1 text-slate-200 text-xs"> <option>em</option><option>px</option><option>rem</option><option>%</option> </select>
+        </div>
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Color</label> <input id="txt-color" type="color" value="#996600" class="w-full h-9 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+      </div>
+     </section><!-- Box -->
+     <section data-template-id="box-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="box-title" class="canva-text font-semibold"></h2>
+      <div><label class="text-slate-300 text-sm block mb-1">Element</label> <select id="box-element" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm"> <option>div</option><option>p</option><option>span</option><option>section</option><option>article</option><option>header</option><option>footer</option> </select>
+      </div>
+      <div class="grid grid-cols-3 gap-3">
+       <div><label class="text-slate-300 text-sm block mb-1">Width</label>
+        <div class="flex gap-1"><input id="box-w" type="number" value="300" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-slate-200 text-sm"> <select id="box-w-unit" class="bg-slate-800 border border-slate-600 rounded px-1 text-slate-200 text-xs"><option>px</option><option>%</option><option>em</option><option>rem</option><option>vw</option><option>vh</option><option>cm</option><option>mm</option><option>in</option><option>pt</option><option>pc</option><option>vmin</option><option>vmax</option></select>
+        </div>
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Height</label>
+        <div class="flex gap-1"><input id="box-h" type="number" value="225" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-slate-200 text-sm"> <select id="box-h-unit" class="bg-slate-800 border border-slate-600 rounded px-1 text-slate-200 text-xs"><option>px</option><option>%</option><option>em</option><option>rem</option><option>vw</option><option>vh</option><option>cm</option><option>mm</option><option>in</option><option>pt</option><option>pc</option><option>vmin</option><option>vmax</option></select>
+        </div>
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Padding</label>
+        <div class="flex gap-1"><input id="box-p" type="number" value="1.5" step="0.1" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-slate-200 text-sm"> <select id="box-p-unit" class="bg-slate-800 border border-slate-600 rounded px-1 text-slate-200 text-xs"><option>em</option><option>px</option><option>rem</option><option>%</option><option>vw</option></select>
+        </div>
+       </div>
+      </div>
+     </section><!-- Border -->
+     <section data-template-id="border-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="border-title" class="canva-text font-semibold"></h2>
+      <div class="grid grid-cols-3 gap-3">
+       <div><label class="text-slate-400 text-xs block mb-1">Color</label> <input id="brd-color" type="color" value="#000000" class="w-full h-8 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+       <div><label class="text-slate-400 text-xs block mb-1">Width</label>
+        <div class="flex gap-1"><input id="brd-width" type="number" value="1" min="0" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-slate-200 text-sm"> <select id="brd-width-unit" class="bg-slate-800 border border-slate-600 rounded px-1 text-slate-200 text-xs"><option>px</option><option>em</option><option>rem</option></select>
+        </div>
+       </div>
+       <div><label class="text-slate-400 text-xs block mb-1">Style</label> <select id="brd-style" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-2 py-1 text-slate-200 text-sm"> <option>solid</option><option>dashed</option><option>dotted</option><option>double</option><option>groove</option><option>ridge</option><option>inset</option><option>outset</option><option>none</option> </select>
+       </div>
+      </div>
+     </section><!-- Unit Reference -->
+     <section data-template-id="units-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="units-title" class="canva-text font-semibold"></h2>
+      <div>
+       <h3 class="text-slate-400 text-xs font-semibold mb-1">Absolute Units</h3>
+       <div class="flex flex-wrap gap-1" id="abs-units"></div>
+      </div>
+      <div>
+       <h3 class="text-slate-400 text-xs font-semibold mb-1">Font-Relative Units</h3>
+       <div class="flex flex-wrap gap-1" id="font-units"></div>
+      </div>
+      <div>
+       <h3 class="text-slate-400 text-xs font-semibold mb-1">Viewport Percentage Units</h3>
+       <div class="flex flex-wrap gap-1" id="vp-units"></div>
+      </div>
+     </section>
+    </div><!-- Preview & Code -->
+    <div class="space-y-5">
+     <section data-template-id="preview-section" class="canva-section rounded-xl p-5">
+      <h2 data-template-id="preview-title" class="canva-text font-semibold mb-4"></h2>
+      <div id="preview-container" class="bg-slate-800/50 rounded-lg p-6 flex items-center justify-center min-h-[280px] border border-slate-700 overflow-auto">
+       <div id="preview-box">
+        Optional text...
+       </div>
+      </div>
+     </section>
+     <section data-template-id="code-section" class="canva-section rounded-xl p-5">
+      <h2 data-template-id="code-title" class="canva-text font-semibold mb-4"></h2>
+      <div class="flex gap-1 mb-3"><button class="code-tab tab-active px-4 py-1.5 rounded-lg text-sm font-medium" data-tab="css">CSS</button> <button class="code-tab px-4 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300" data-tab="html">HTML</button> <button class="code-tab px-4 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300" data-tab="full">Full Code</button>
+      </div>
+      <pre id="code-output" class="code-output bg-slate-900 rounded-lg p-4 overflow-x-auto text-slate-300 border border-slate-700 min-h-[120px] whitespace-pre-wrap"></pre>
+      <div class="flex gap-3 mt-4"><button id="copy-btn" class="flex items-center gap-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg text-sm font-medium transition-colors"> <i data-lucide="copy" style="width:14px;height:14px"></i> Copy Code </button> <button id="download-btn" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-sm font-medium transition-colors"> <i data-lucide="download" style="width:14px;height:14px"></i> Download HTML </button>
+      </div>
+     </section><!-- Documentation -->
+     <section data-template-id="docs-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="docs-title" class="canva-text font-semibold"></h2>
+      <p data-template-id="docs-intro" class="canva-text text-sm leading-relaxed"></p>
+      <h3 data-template-id="docs-css-title" class="canva-text font-semibold"></h3>
+      <p data-template-id="docs-css-text" class="canva-text text-sm leading-relaxed"></p>
+      <h3 data-template-id="docs-prefix-title" class="canva-text font-semibold"></h3>
+      <p data-template-id="docs-prefix-text" class="canva-text text-sm leading-relaxed"></p>
+     </section>
+    </div>
+   </div>
+   <footer class="mt-10 border-t border-slate-700/50 pt-6 pb-4">
+    <p data-template-id="footer-text" class="canva-text text-center text-xs"></p>
+   </footer>
+  </main>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+        lucide.createIcons();
+
+        // Unit chips
+        const absUnits = ['px','cm','mm','in','pt','pc'];
+        const fontUnits = ['em','rem','ex','ch'];
+        const vpUnits = ['vw','vh','vmin','vmax'];
+
+        function renderChips(container, units) {
+            const el = document.getElementById(container);
+            units.forEach(u => {
+                const chip = document.createElement('span');
+                chip.className = 'unit-chip inline-block px-2 py-0.5 bg-slate-700 text-slate-300 rounded text-xs';
+                chip.textContent = u;
+                chip.addEventListener('click', () => {
+                    // Copy unit name
+                    navigator.clipboard.writeText(u);
+                    showToast(`Copied: ${u}`);
+                });
+                el.appendChild(chip);
+            });
+        }
+        renderChips('abs-units', absUnits);
+        renderChips('font-units', fontUnits);
+        renderChips('vp-units', vpUnits);
+
+        // State
+        let direction = 'to right';
+        let currentTab = 'css';
+
+        // Direction buttons
+        document.querySelectorAll('.dir-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.dir-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                direction = btn.dataset.dir;
+                update();
+            });
+        });
+
+        // Code tabs
+        document.querySelectorAll('.code-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.code-tab').forEach(t => t.className = 'code-tab px-4 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300');
+                tab.className = 'code-tab tab-active px-4 py-1.5 rounded-lg text-sm font-medium';
+                currentTab = tab.dataset.tab;
+                update();
+            });
+        });
+
+        // All inputs
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(i => { i.addEventListener('input', update); i.addEventListener('change', update); });
+
+        function val(id) { return document.getElementById(id).value; }
+
+        function getDirDeg() {
+            const map = { 'to top':'0deg','to top right':'45deg','to right':'90deg','to bottom right':'135deg','to bottom':'180deg','to bottom left':'225deg','to left':'270deg','to top left':'315deg' };
+            return map[direction] || '90deg';
+        }
+
+        function getWebkitDir() {
+            const map = { 'to top':'bottom','to top right':'bottom left','to right':'left','to bottom right':'top left','to bottom':'top','to bottom left':'top right','to left':'right','to top left':'bottom right' };
+            return map[direction] || 'left';
+        }
+
+        function update() {
+            const c1 = val('color1'), c2 = val('color2');
+            const txt = val('txt-content'), font = val('txt-font'), size = val('txt-size'), sizeU = val('txt-size-unit');
+            const lh = val('txt-lh'), lhU = val('txt-lh-unit'), txtColor = val('txt-color');
+            const element = val('box-element');
+            const w = val('box-w'), wU = val('box-w-unit'), h = val('box-h'), hU = val('box-h-unit');
+            const p = val('box-p'), pU = val('box-p-unit');
+            const bc = val('brd-color'), bw = val('brd-width'), bwU = val('brd-width-unit'), bs = val('brd-style');
+            const addPrefixes = document.getElementById('prefixes').checked;
+            const deg = getDirDeg();
+            const wkDir = getWebkitDir();
+
+            // Preview
+            const box = document.getElementById('preview-box');
+            box.textContent = txt;
+            box.style.cssText = `
+                background: linear-gradient(${deg}, ${c1} 0%, ${c2} 100%);
+                color: ${txtColor};
+                width: ${w}${wU};
+                height: ${h}${hU};
+                padding: ${p}${pU};
+                font-family: '${font}';
+                font-size: ${size}${sizeU};
+                line-height: ${lh}${lhU};
+                border: ${bw}${bwU} ${bs} ${bc};
+                max-width: 100%;
+                overflow: auto;
+            `;
+
+            // Generate CSS
+            let css = `${element}.GeneratedGradient {\n`;
+            css += `\n  /* Gradient */\n`;
+            if (addPrefixes) {
+                css += `  background: -webkit-linear-gradient(${wkDir}, ${c1} 0%, ${c2} 100%);\n`;
+                css += `  background: -moz-linear-gradient(${wkDir}, ${c1} 0%, ${c2} 100%);\n`;
+                css += `  background: -o-linear-gradient(${wkDir}, ${c1} 0%, ${c2} 100%);\n`;
+                css += `  background: -ms-linear-gradient(${wkDir}, ${c1} 0%, ${c2} 100%);\n`;
+            }
+            css += `  background: linear-gradient(${deg}, ${c1} 0%, ${c2} 100%);\n`;
+            css += `\n  /* Box */\n`;
+            css += `  color: ${txtColor};\n`;
+            css += `  width: ${w}${wU};\n`;
+            css += `  height: ${h}${hU};\n`;
+            css += `  padding: ${p}${pU};\n`;
+            css += `  font-family: '${font}';\n`;
+            css += `  font-size: ${size}${sizeU};\n`;
+            css += `  line-height: ${lh}${lhU};\n`;
+            if (parseInt(bw) > 0) {
+                css += `\n  /* Border */\n`;
+                css += `  border-width: ${bw}${bwU};\n`;
+                css += `  border-color: ${bc};\n`;
+                css += `  border-style: ${bs};\n`;
+            }
+            css += `}`;
+
+            const html = `<${element} class="GeneratedGradient">${txt}</${element}>`;
+            const full = `<!-- CSS Code -->\n<style>\n${css}\n</style>\n\n<!-- HTML Code -->\n${html}`;
+
+            const output = document.getElementById('code-output');
+            if (currentTab === 'css') output.textContent = css;
+            else if (currentTab === 'html') output.textContent = html;
+            else output.textContent = full;
+        }
+
+        // Copy
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            navigator.clipboard.writeText(document.getElementById('code-output').textContent).then(() => showToast('Copied!'));
+        });
+
+        // Download
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const code = document.getElementById('code-output').textContent;
+            const blob = new Blob([`<!DOCTYPE html>\n<html><head></head><body>\n${code}\n</body></html>`], { type: 'text/html' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'gradient.html'; a.click();
+        });
+
+        // Reset
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            document.getElementById('color1').value = '#FFFF00';
+            document.getElementById('color2').value = '#FF9900';
+            document.getElementById('txt-content').value = 'Optional text...';
+            document.getElementById('txt-font').value = 'Arial';
+            document.getElementById('txt-size').value = '2';
+            document.getElementById('txt-size-unit').value = 'em';
+            document.getElementById('txt-lh').value = '1.3';
+            document.getElementById('txt-lh-unit').value = 'em';
+            document.getElementById('txt-color').value = '#996600';
+            document.getElementById('box-element').value = 'div';
+            document.getElementById('box-w').value = '300';
+            document.getElementById('box-w-unit').value = 'px';
+            document.getElementById('box-h').value = '225';
+            document.getElementById('box-h-unit').value = 'px';
+            document.getElementById('box-p').value = '1.5';
+            document.getElementById('box-p-unit').value = 'em';
+            document.getElementById('brd-color').value = '#000000';
+            document.getElementById('brd-width').value = '1';
+            document.getElementById('brd-style').value = 'solid';
+            document.getElementById('prefixes').checked = true;
+            direction = 'to right';
+            document.querySelectorAll('.dir-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector('[data-dir="to right"]').classList.add('active');
+            update();
+        });
+
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg';
+            t.textContent = msg;
+            document.getElementById('toast-container').appendChild(t);
+            setTimeout(() => t.remove(), 2500);
+        }
+
+        update();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a05566ff18dc8609',t:'MTc4MDM5MjIzNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
