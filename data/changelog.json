@@ -1,5 +1,10 @@
 [
   {
+    "title": "Create build-blog.js",
+    "date": "2026-06-02T05:00:09Z",
+    "description": "Platform improvement and optimization."
+  },
+  {
     "title": "Add SmartGen Blog frontend JavaScript functionality",
     "date": "2026-06-02T04:56:56Z",
     "description": "This file contains the JavaScript code for the SmartGen Blog frontend, handling dynamic blog rendering, filtering, search, related posts, and scroll animations."
