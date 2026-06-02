@@ -1,5 +1,10 @@
 [
   {
+    "title": "Update index.html",
+    "date": "2026-06-02T06:24:08Z",
+    "description": "Platform improvement and optimization."
+  },
+  {
     "title": "Add auto-inject script for testing tools metadata",
     "date": "2026-06-02T06:07:02Z",
     "description": "This script scans directories for testing tools, extracts metadata from their HTML files, and updates the search-data.js, index.html, and app.js files accordingly."
