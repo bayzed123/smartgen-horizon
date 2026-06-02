@@ -1,5 +1,10 @@
 [
   {
+    "title": "Add link to 'Our Next Goal' in README",
+    "date": "2026-06-02T08:23:52Z",
+    "description": "Added a link to the next goal document in the README."
+  },
+  {
     "title": "Enhance next-goal.md with SEO and layout details",
     "date": "2026-06-02T08:22:28Z",
     "description": "Added SEO plan requirements and updated page layout details."
