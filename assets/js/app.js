@@ -1,19 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
-    injectNavbar();
-    injectFooter();
-    initTheme();
-    initAccordion();
-});
-
 function injectNavbar() {
     const header = document.getElementById('main-header');
     if (!header) return;
 
-    // Beta Testing Navbar
+    // Beta Testing Navbar with Correct GitHub Pages Paths
     header.innerHTML = `
         <div class="container">
             <div class="header-content">
-                <a href="/" class="logo">
+                <a href="/smartgen-horizon/" class="logo">
                     <div class="logo-icon">⚡</div>
                     SmartGen <span style="font-size: 0.8rem; background: #ffc107; color: #856404; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">BETA</span>
                 </a>
@@ -22,9 +15,9 @@ function injectNavbar() {
                     <button id="mobile-menu-toggle" class="icon-btn mobile-only" title="Toggle Menu">☰</button>
                 </div>
                 <nav id="nav-links">
-                    <a href="/">🏠 Home</a>
-                    <a href="/updates/">🔄 Changelog</a>
-                    <a href="/cookies/">🍪 Cookie Policy</a>
+                    <a href="/smartgen-horizon/">🏠 Home</a>
+                    <a href="/smartgen-horizon/updates/">🔄 Changelog</a>
+                    <a href="/smartgen-horizon/cookies/">🍪 Cookie Policy</a>
                     <a href="https://smartgentools.com" target="_blank" style="color: #d97706; font-weight: bold;">🚀 Live Platform</a>
                 </nav>
             </div>
@@ -32,7 +25,7 @@ function injectNavbar() {
 
         <aside id="mobile-sidebar" class="mobile-sidebar">
             <div class="sidebar-header">
-                <a href="/" class="sidebar-logo">
+                <a href="/smartgen-horizon/" class="sidebar-logo">
                     <div class="sidebar-logo-icon">⚡</div>
                     SmartGen Beta
                 </a>
@@ -40,15 +33,15 @@ function injectNavbar() {
             </div>
 
             <div class="sidebar-nav-links" style="display: flex; flex-direction: column; padding: 20px; overflow-y: auto;">
-                <a href="/" class="nav-item" style="color: var(--text-primary); padding: 10px 0; text-decoration: none; font-weight: 600; font-size: 1rem;">🏠 Home (Playground)</a>
-                <a href="/updates/" class="nav-item" style="color: var(--text-primary); padding: 10px 0; text-decoration: none; font-weight: 600; font-size: 1rem;">🔄 Updates & Changelog</a>
+                <a href="/smartgen-horizon/" class="nav-item" style="color: var(--text-primary); padding: 10px 0; text-decoration: none; font-weight: 600; font-size: 1rem;">🏠 Home (Playground)</a>
+                <a href="/smartgen-horizon/updates/" class="nav-item" style="color: var(--text-primary); padding: 10px 0; text-decoration: none; font-weight: 600; font-size: 1rem;">🔄 Updates & Changelog</a>
                 <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border-color, #e5e7eb);">
                 
                 <div class="nav-category" style="font-weight: 700; color: var(--text-secondary, #6b7280); margin-top: 10px; font-size: 0.85rem; text-transform: uppercase;">⚠️ Testing Environment</div>
                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px; line-height: 1.4;">This is a staging area. Tools here are under development.</p>
 
                 <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border-color, #e5e7eb);">
-                <a href="/cookies/" class="nav-item" style="color: var(--text-primary); padding: 10px 0; text-decoration: none; display: block; font-weight: 500;">🍪 Cookie Policy</a>
+                <a href="/smartgen-horizon/cookies/" class="nav-item" style="color: var(--text-primary); padding: 10px 0; text-decoration: none; display: block; font-weight: 500;">🍪 Cookie Policy</a>
                 <a href="https://smartgentools.com" target="_blank" class="nav-item" style="background: #0056b3; color: #fff; text-align: center; border-radius: 6px; padding: 12px 0; margin-top: 10px; text-decoration: none; display: block; font-weight: bold;">🚀 Visit Live Platform</a>
             </div>
         </aside>
@@ -92,7 +85,7 @@ function injectFooter() {
     const footer = document.getElementById('main-footer');
     if (!footer) return;
 
-    // Beta Testing Footer (Simplified to avoid 404 links)
+    // Beta Testing Footer with Correct GitHub Pages Paths
     footer.innerHTML = `
         <div class="container">
             <div class="footer-top" style="justify-content: space-between;">
@@ -108,15 +101,15 @@ function injectFooter() {
                     <div class="footer-column">
                         <h4 class="footer-accordion-trigger">Testing Hub <span class="accordion-icon"></span></h4>
                         <ul class="footer-links">
-                            <li><a href="/">Playground Home</a></li>
-                            <li><a href="/updates/">Updates & Changelog</a></li>
+                            <li><a href="/smartgen-horizon/">Playground Home</a></li>
+                            <li><a href="/smartgen-horizon/updates/">Updates & Changelog</a></li>
                             <li><a href="https://smartgentools.com" target="_blank" style="color: #2563eb; font-weight: bold;">Live Platform ↗</a></li>
                         </ul>
                     </div>
                     <div class="footer-column">
                         <h4 class="footer-accordion-trigger">Legal / Testing <span class="accordion-icon"></span></h4>
                         <ul class="footer-links">
-                            <li><a href="/cookies/">Cookie Policy</a></li>
+                            <li><a href="/smartgen-horizon/cookies/">Cookie Policy</a></li>
                             <li><a href="https://github.com/bayzed123/smartgen-horizon" target="_blank">GitHub Repository</a></li>
                         </ul>
                     </div>
@@ -135,60 +128,4 @@ function injectFooter() {
     `;
 
     initFooterAccordion();
-}
-
-function initFooterAccordion() {
-    const triggers = document.querySelectorAll('.footer-accordion-trigger');
-    
-    triggers.forEach(trigger => {
-        trigger.addEventListener('click', () => {
-            if (window.innerWidth < 768) {
-                const column = trigger.parentElement;
-                const isActive = column.classList.contains('active');
-                
-                // Close all other footer accordion items
-                document.querySelectorAll('.footer-column').forEach(otherCol => {
-                    if (otherCol !== column) {
-                        otherCol.classList.remove('active');
-                    }
-                });
-                
-                // Toggle current item
-                column.classList.toggle('active');
-            }
-        });
-    });
-}
-
-function initAccordion() {
-    const accordionHeaders = document.querySelectorAll('.accordion-header');
-    
-    accordionHeaders.forEach(header => {
-        header.addEventListener('click', () => {
-            const item = header.parentElement;
-            const isActive = item.classList.contains('active');
-            
-            // Close all other accordion items
-            document.querySelectorAll('.accordion-item').forEach(otherItem => {
-                if (otherItem !== item) {
-                    otherItem.classList.remove('active');
-                }
-            });
-            
-            // Toggle current item
-            item.classList.toggle('active');
-        });
-    });
-}
-
-function initTheme() {
-    const theme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', theme);
-}
-
-function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
 }
