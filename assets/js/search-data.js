@@ -14,6 +14,19 @@ const TOOLS_INDEX = [
         "description": "Generate, edit, and preview HTML codes instantly. Access a huge library of HTML generators, text codes, tables, marquees, and more.",
         "url": "./master-html-playground-snippet-library/",
         "icon": "💻"
+    },
+    {
+        "id": "txt-to-markdown-generate",
+        "title": "Plain Text to Markdown",
+        "category": "Beta Testing",
+        "keywords": [
+            "txt-to-markdown-generate",
+            "tool",
+            "beta"
+        ],
+        "description": "Beta testing tool under development.",
+        "url": "./txt-to-markdown-generate/",
+        "icon": "🔧"
     }
 ];
 // AUTO_INJECT_SEARCH_END
