@@ -1,7 +1,21 @@
 // Comprehensive search index for all SmartGen tools
 
 // AUTO_INJECT_SEARCH_START
-const TOOLS_INDEX = [];
+const TOOLS_INDEX = [
+    {
+        "id": "master-html-playground-snippet-library",
+        "title": "Live HTML Editor & Code Library",
+        "category": "Developer Tools",
+        "keywords": [
+            "master-html-playground-snippet-library",
+            "tool",
+            "beta"
+        ],
+        "description": "Generate, edit, and preview HTML codes instantly. Access a huge library of HTML generators, text codes, tables, marquees, and more.",
+        "url": "./master-html-playground-snippet-library/",
+        "icon": "💻"
+    }
+];
 // AUTO_INJECT_SEARCH_END
 
 // Search function
