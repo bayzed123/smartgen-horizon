@@ -103,7 +103,7 @@ html-code-library/
     └── js/
         └── app.js
 
-TOTAL UNIQUE FILES:
+### TOTAL UNIQUE FILES
 - 1 Dashboard (index.html)
 - 79 Content Pages
 - 1 CSS File
