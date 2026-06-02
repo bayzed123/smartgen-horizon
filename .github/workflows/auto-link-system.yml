@@ -1,0 +1,8 @@
+      - name: scan html files
+        run: |
+          find . -type f -name "*.html" \
+          ! -path "./node_modules/*" \
+          ! -path "./.github/*" > html-files.txt
+
+      - name: extract all links (DEDUP SYSTEM)
+        run: node scripts/extract-links.js
