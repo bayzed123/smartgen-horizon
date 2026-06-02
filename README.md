@@ -11,7 +11,7 @@ BETA LIVE [SmartGenHorizontal](https://bayzed123.github.io/smartgen-horizon/)
 **SmartGen Horizon** is the official testing ground for the premier, open-source web utility ecosystem, **SmartGen**. This isolated sandbox is where we build, test, and refine our upcoming high-performance web utilities before they are deployed to production. Like our main platform, all tools developed here strictly follow a **100% Client-Side** architecture, ensuring absolute privacy, zero server-side data storage, and lightning-fast execution.
 
 ---
-
+** [Markdown Writer Free use](https://bayzed123.github.io/smartgen-horizon/txt-to-markdown-generate/)
 ## 🌐 Quick Access & Legal
 | Resource | Link |
 | :--- | :--- |
