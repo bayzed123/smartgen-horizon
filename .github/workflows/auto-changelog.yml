@@ -1,4 +1,4 @@
-name: Auto Changelog Update
+name: auto-update-system
 
 on:
   push:
@@ -6,46 +6,53 @@ on:
       - main
     paths-ignore:
       - 'data/changelog.json'
+      - 'index.html'
+      - 'assets/js/search-data.js'
       - '.github/workflows/**'
 
 jobs:
-  update-changelog:
+  update-system:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - name: Checkout Repository
+      - name: checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Extract Commit Info
+      - name: setup node js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: inject tools to homepage
+        run: node scripts/auto-inject-tools.js
+
+      - name: extract commit info
         id: commit_info
         run: |
           echo "TITLE=$(git log -1 --pretty=%s)" >> $GITHUB_OUTPUT
           echo "DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_OUTPUT
           echo "DESC=$(git log -1 --pretty=%b | tr -d '\n' | sed 's/"/\\"/g')" >> $GITHUB_OUTPUT
 
-      - name: Update changelog.json
+      - name: update changelog json
         run: |
           FILE="data/changelog.json"
-          # Create file if it doesn't exist
           if [ ! -f "$FILE" ]; then echo "[]" > "$FILE"; fi
           
-          # Prepare new entry
           NEW_ENTRY=$(jq -n \
             --arg title "${{ steps.commit_info.outputs.TITLE }}" \
             --arg date "${{ steps.commit_info.outputs.DATE }}" \
             --arg desc "${{ steps.commit_info.outputs.DESC }}" \
-            '{title: $title, date: $date, description: (if $desc == "" then "Platform improvement and optimization." else $desc end)}')
+            '{title: $title, date: $date, description: (if $desc == "" then "platform improvement and optimization." else $desc end)}')
           
-          # Append to top of array
           jq ". = [$NEW_ENTRY] + ." "$FILE" > temp.json && mv temp.json "$FILE"
 
-      - name: Commit and Push
+      - name: commit and push
         run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
-          git add data/changelog.json
-          git commit -m "chore: update changelog [skip ci]" || exit 0
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/changelog.json index.html assets/js/search-data.js
+          git commit -m "chore: update changelog and tools grid [skip ci]" || exit 0
           git push
