@@ -3,10 +3,8 @@
 <head>
     <meta charset="UTF-8">
     
-    <!-- 🛑 SEO Protection for Staging Environment 🛑 -->
     <meta name="robots" content="noindex, nofollow">
     
-    <!-- Essential CSS -->
     <link rel="preload" href="./assets/css/style.css" as="style" onload="this.rel='stylesheet'">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
@@ -20,7 +18,6 @@
     
     <link rel="stylesheet" href="./assets/css/style.css">
     
-    <!-- Essential Core Scripts (Needed for build/workflows and header/footer injection) -->
     <script src="./assets/js/app.js" defer></script>
     <script src="./assets/js/search-data.js" defer></script>
     <script src="./assets/js/search.js" defer></script>
@@ -44,15 +41,12 @@
 </head>
 <body>
     
-    <!-- App.js will inject header here -->
     <header id="main-header"></header>
 
     <main>
-        <!-- Hero Section -->
         <section class="hero" style="text-align: center; padding: 5rem 0; background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%); border-bottom: 2px dashed #ffc107;">
             <div class="container">
                 
-                <!-- 🚧 Animated Beta Badge (Simple Marquee) -->
                 <div style="max-width: 500px; margin: 0 auto 1.5rem auto;">
                     <marquee behavior="alternate" scrollamount="4" style="background: #ffc107; color: #856404; padding: 0.5rem 1.2rem; border-radius: 50px; font-weight: bold; font-size: 0.95rem; border: 1px solid #ffeeba; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
                         🚧 SmartGen Horizon: Beta Testing Environment
@@ -65,7 +59,6 @@
                     <strong>Note:</strong> You are currently viewing the experimental staging server. Tools here are under development.
                 </p>
                 
-                <!-- Live Search Bar -->
                 <div id="live-search-container">
                     <div class="search-wrapper">
                         <span class="search-icon">🔍</span>
@@ -82,10 +75,8 @@
             </div>
         </section>
 
-        <!-- Tool Section wrapper kept to prevent search.js console errors -->
         <section id="all-tools" class="container" style="padding: 4rem 0; text-align: center;">
             
-            <!-- Link to Main Live Website -->
             <div style="background: #f8f9fa; border: 1px solid #e1e8ed; border-radius: 12px; padding: 3rem; max-width: 600px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
                 <div style="font-size: 3.5rem; margin-bottom: 1rem;">🚀</div>
                 <h2 style="margin-bottom: 1rem; color: #2d3748;">Looking for the Live Tools?</h2>
@@ -97,15 +88,12 @@
                 </a>
             </div>
 
-            <!-- Placeholder for Beta Tools -->
             <div style="margin-top: 5rem; padding-top: 3rem; border-top: 1px dashed #cbd5e0;">
                 <h3 style="color: #718096; font-weight: normal;">[ New Tools Under Test Will Appear Here ]</h3>
             </div>
-
-        </section>
+            </section>
     </main>
 
-    <!-- App.js will inject footer here -->
     <footer id="main-footer"></footer>
 
 </body>
