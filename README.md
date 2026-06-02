@@ -1,4 +1,5 @@
 # smartgen-horizon
+[Our Next Goal](next-goal.md)
 SmartGen Labs: The secure testing repository for the ultimate 100% Client-Side digital utility platform.
 # 🌅 SmartGen Horizon: The Staging & Development Hub
 BETA LIVE [SmartGenHorizontal](https://bayzed123.github.io/smartgen-horizon/)
