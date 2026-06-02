@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <!-- 🛑 SEO Protection for Staging Environment 🛑 -->
+    <meta name="robots" content="noindex, nofollow">
+    
+    <link rel="preload" href="../assets/css/style.css" as="style" onload="this.rel='stylesheet'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <title>SmartGen Horizon [BETA] - Updates & Changelog</title>
+    <meta name="description" content="Track all the latest improvements, new features, and updates to SmartGen Beta platform.">
+    
+    <link rel="stylesheet" href="../assets/css/style.css">
+    
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "How often does SmartGen release updates?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "SmartGen follows an agile development cycle with regular updates released based on feature completion and user feedback. Major updates are typically released monthly, with minor updates and bug fixes deployed as needed to ensure optimal platform performance."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Will updates affect my existing tools and data?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No, SmartGen updates are designed to be backward compatible. All existing tools continue to work seamlessly, and your data remains safe and accessible. We carefully plan updates to ensure zero disruption to your workflow and experience."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "How can I request a new feature or report a bug?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "We welcome user feedback and feature requests. You can report bugs or suggest new features by visiting our GitHub repository or contacting our support team directly. Your feedback helps us prioritize development and create tools that truly meet user needs."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "What types of tools does SmartGen offer?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "SmartGen offers a comprehensive suite of digital utility tools including QR code generators, SEO tools (meta tags, robots.txt, schema generators), text utilities (word counter, case converter), marketing tools (UTM builder, hashtag generator), and specialized tools like image converters, password generators, and more. All tools are completely free to use."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is SmartGen completely free?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes, SmartGen is 100% free. All our tools are available at no cost, with no hidden fees, subscriptions, or premium features. We believe in providing quality digital utilities accessible to everyone."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I use SmartGen tools for commercial purposes?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Absolutely! SmartGen tools can be used for both personal and commercial purposes. Whether you're running a business, managing marketing campaigns, or working on personal projects, you're free to use any of our tools without restrictions."
+                }
+            }
+        ]
+    }
+    </script>
+    <style>
+        .updates-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
+        }
+
+        .timeline-item {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: 0;
+            margin-right: 52%;
+            text-align: right;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 52%;
+            margin-right: 0;
+            text-align: left;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: #3b82f6;
+            border: 4px solid #1e293b;
+            border-radius: 50%;
+            top: 0;
+            z-index: 10;
+        }
+
+        .timeline-content {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3b82f6;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .timeline-date {
+            font-size: 0.9rem;
+            color: #8b5cf6;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .timeline-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-marker {
+                left: 20px;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 60px;
+                margin-right: 0;
+                text-align: left;
+            }
+        }
+
+        .seo-content {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--bg-secondary);
+        }
+
+        .seo-content h2 {
+            font-size: 1.8rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .seo-content h3 {
+            font-size: 1.3rem;
+            margin-top: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .seo-content p {
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .faq-section {
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .faq-container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .faq-container .accordion-item {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-container .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-container .accordion-header {
+            padding: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .faq-container .accordion-content {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    
+    <header id="main-header"></header>
+
+    <main class="updates-container">
+        
+        <!-- 🚧 Animated Beta Badge (Simple Marquee) -->
+        <div style="max-width: 500px; margin: 1rem auto 2.5rem auto;">
+            <marquee behavior="alternate" scrollamount="4" style="background: #ffc107; color: #856404; padding: 0.5rem 1.2rem; border-radius: 50px; font-weight: bold; font-size: 0.95rem; border: 1px solid #ffeeba; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                🚧 SmartGen Horizon: Beta Testing Environment
+            </marquee>
+        </div>
+
+        <h1 style="text-align: center; margin-bottom: 0.5rem;">SmartGen Updates & Changelog</h1>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Track all the latest improvements and new features being tested</p>
+
+        <div class="timeline" id="timeline">
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <p>No updates yet. Check back soon for exciting new features!</p>
+            </div>
+        </div>
+
+        <div class="seo-content">
+            <h2>Understanding SmartGen Updates & Changelog</h2>
+            <p>The SmartGen platform is constantly evolving to provide users with the best digital utility tools available. Our updates page serves as a comprehensive record of all improvements, new features, bug fixes, and enhancements made to the platform. By maintaining a detailed changelog, we ensure transparency and keep our users informed about what's new and what has been improved.</p>
+
+            <h3>Why Regular Updates Matter</h3>
+            <p>Regular updates are crucial for any web application. They ensure that the platform remains secure, performs optimally, and continues to meet user expectations. SmartGen commits to delivering regular updates that enhance functionality, improve user experience, and introduce innovative features that help users accomplish their digital tasks more efficiently. Each update is carefully tested to maintain the stability and reliability of the platform.</p>
+
+            <h3>How to Stay Updated</h3>
+            <p>Users can visit this page anytime to see the latest changes and improvements made to SmartGen. The timeline view provides a clear, chronological display of all updates, making it easy to understand what has changed and when. Whether you're interested in new tool releases, performance improvements, or bug fixes, this page serves as your go-to resource for all SmartGen updates.</p>
+
+            <h2>Frequently Asked Questions About SmartGen Updates</h2>
+
+            <section class="faq-section">
+                <div class="faq-container">
+                    <div class="accordion-item active">
+                        <button class="accordion-header">
+                            <span>How often does SmartGen release updates?</span>
+                            <span class="accordion-icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <p>SmartGen follows an agile development cycle with regular updates released based on feature completion and user feedback. Major updates are typically released monthly, with minor updates and bug fixes deployed as needed to ensure optimal platform performance.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>Will updates affect my existing tools and data?</span>
+                            <span class="accordion-icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <p>No, SmartGen updates are designed to be backward compatible. All existing tools continue to work seamlessly, and your data remains safe and accessible. We carefully plan updates to ensure zero disruption to your workflow and experience.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>How can I request a new feature or report a bug?</span>
+                            <span class="accordion-icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <p>We welcome user feedback and feature requests. You can report bugs or suggest new features by visiting our GitHub repository or contacting our support team directly. Your feedback helps us prioritize development and create tools that truly meet user needs.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>What types of tools does SmartGen offer?</span>
+                            <span class="accordion-icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <p>SmartGen offers a comprehensive suite of digital utility tools including QR code generators, SEO tools (meta tags, robots.txt, schema generators), text utilities (word counter, case converter), marketing tools (UTM builder, hashtag generator), and specialized tools like image converters, password generators, and more. All tools are completely free to use.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>Is SmartGen completely free?</span>
+                            <span class="accordion-icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <p>Yes, SmartGen is 100% free. All our tools are available at no cost, with no hidden fees, subscriptions, or premium features. We believe in providing quality digital utilities accessible to everyone.</p>
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-header">
+                            <span>Can I use SmartGen tools for commercial purposes?</span>
+                            <span class="accordion-icon"></span>
+                        </button>
+                        <div class="accordion-content">
+                            <p>Absolutely! SmartGen tools can be used for both personal and commercial purposes. Whether you're running a business, managing marketing campaigns, or working on personal projects, you're free to use any of our tools without restrictions.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <h2>The SmartGen Commitment to Excellence</h2>
+            <p>SmartGen is dedicated to providing a world-class platform for digital utilities. Our development team works tirelessly to ensure that every update brings tangible value to users. Whether it's improving performance, adding new tools, or refining existing features, every change is made with user satisfaction in mind. We believe in continuous improvement and transparency, which is why we maintain this detailed changelog for all our users.</p>
+        </div>
+    </main>
+
+    <footer id="main-footer"></footer>
+
+    <script src="../assets/js/app.js"></script>
+    <script src="script.js"></script>
+
+<!-- Cookie Consent Banner -->
+<div id="cookie-consent-banner" style="position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; border-top: 1px solid #e1e8ed; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 9999; display: none; padding: 1rem 0;">
+    <div class="container" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem;">
+        <div style="flex: 1; min-width: 280px;">
+            <p style="margin: 0; font-size: 0.9rem; color: #4a5568; line-height: 1.5;">
+                We use cookies to improve your experience, analyze site traffic, and serve personalized ads. By continuing to use our site, you consent to our <a href="/privacy/" style="color: #0052cc; text-decoration: underline;">Privacy Policy</a>.
+            </p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <a href="/privacy/" style="font-size: 0.9rem; color: #0052cc; text-decoration: none; font-weight: 500;">Learn More About Our Privacy Policy</a>
+            <button id="accept-cookies" style="background: #0052cc; color: #ffffff; border: none; padding: 0.6rem 1.5rem; border-radius: 6px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.2s;">Accept</button>
+        </div>
+    </div>
+</div>
+<script>
+    (function() {
+        const banner = document.getElementById('cookie-consent-banner');
+        const acceptBtn = document.getElementById('accept-cookies');
+        
+        if (!localStorage.getItem('cookie-consent-accepted')) {
+            banner.style.display = 'block';
+        }
+        
+        acceptBtn.addEventListener('click', function() {
+            localStorage.setItem('cookie-consent-accepted', 'true');
+            banner.style.display = 'none';
+        });
+    })();
+</script>
+
+</body>
+</html>
