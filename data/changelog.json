@@ -1,5 +1,10 @@
 [
   {
+    "title": "Create blog.json",
+    "date": "2026-06-02T04:33:28Z",
+    "description": "Platform improvement and optimization."
+  },
+  {
     "version": "v1.2.0-beta",
     "date": "2026-06-02",
     "title": "New Tool Added: JSON Formatter",
