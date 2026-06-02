@@ -1,0 +1,9 @@
+./html-master-ready-code-free/image-generator-code.html
+./html-master-ready-code-free/css3-gradient-generator.html
+./html-master-ready-code-free/table-generator.html
+./updates/index.html
+./txt-to-markdown-generate/index.html
+./cookies/index.html
+./index.html
+./master-html-playground-snippet-library/html-link-generator.html
+./master-html-playground-snippet-library/index.html
