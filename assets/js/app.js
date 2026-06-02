@@ -43,6 +43,14 @@ function injectNavbar() {
                 <a href="/smartgen-horizon/updates/" class="nav-item" style="color: var(--text-primary); padding: 10px 0; text-decoration: none; font-weight: 600; font-size: 1rem;">🔄 Updates & Changelog</a>
                 <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border-color, #e5e7eb);">
                 
+                <div class="nav-category" style="font-weight: 700; color: var(--text-secondary, #6b7280); margin-top: 10px; font-size: 0.85rem; text-transform: uppercase;">🔧 Beta Tools</div>
+                
+                <!-- 👇 AUTOMATION SCRIPT WILL INJECT SIDEBAR LINKS HERE 👇 -->
+                <!-- AUTO_INJECT_SIDEBAR_START -->
+                <!-- AUTO_INJECT_SIDEBAR_END -->
+
+                <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border-color, #e5e7eb);">
+                
                 <div class="nav-category" style="font-weight: 700; color: var(--text-secondary, #6b7280); margin-top: 10px; font-size: 0.85rem; text-transform: uppercase;">⚠️ Testing Environment</div>
                 <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px; line-height: 1.4;">This is a staging area. Tools here are under development.</p>
 
@@ -68,27 +76,21 @@ function injectNavbar() {
     const sidebarOverlay = document.getElementById('sidebar-overlay');
     
     if (menuToggle && sidebar && sidebarOverlay && sidebarClose) {
-        // Open sidebar
         menuToggle.addEventListener('click', () => {
             sidebar.classList.add('active');
             sidebarOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Stop background scrolling
+            document.body.style.overflow = 'hidden'; 
         });
 
-        // Close sidebar function
         const closeSidebar = () => {
             sidebar.classList.remove('active');
             sidebarOverlay.classList.remove('active');
-            document.body.style.overflow = ''; // Restore background scrolling
+            document.body.style.overflow = ''; 
         };
 
-        // Close sidebar on Close button click
         sidebarClose.addEventListener('click', closeSidebar);
-        
-        // Close sidebar on Overlay click
         sidebarOverlay.addEventListener('click', closeSidebar);
 
-        // Close sidebar when clicking any link inside it
         sidebar.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 closeSidebar();
