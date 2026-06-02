@@ -2,7 +2,7 @@
 # smartgen-horizon
 SmartGen Labs: The secure testing repository for the ultimate 100% Client-Side digital utility platform.
 # 🌅 SmartGen Horizon: The Staging & Development Hub
-** BETA LIVE [SmartGenHorizontal](https://bayzed123.github.io/smartgen-horizon/)
+BETA LIVE [SmartGenHorizontal](https://bayzed123.github.io/smartgen-horizon/)
 [![Auto Changelog Status](https://github.com/bayzed123/smartgen-horizon/actions/workflows/auto-changelog.yml/badge.svg)](https://github.com/bayzed123/smartgen-horizon/actions/workflows/auto-changelog.yml) [![Pages Build Deployment](https://github.com/bayzed123/smartgen-horizon/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/bayzed123/smartgen-horizon/actions/workflows/pages/pages-build-deployment)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Open Source Love](https://badges.frapsoft.com/os/v1/open-source.svg?v=103)](https://github.com/bayzed123/smartgen-horizon)
