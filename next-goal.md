@@ -1,3 +1,9 @@
+```markdown
+# HTML Code Library
+
+## 📁 Folder Structure
+
+```text
 html-code-library/
 │
 ├── index.html
@@ -103,10 +109,14 @@ html-code-library/
     └── js/
         └── app.js
 
-### TOTAL UNIQUE FILES
-- 1 Dashboard (index.html)
-- 79 Content Pages
-- 1 CSS File
-- 1 JS File
+```
+## 📊 Project Summary
+**TOTAL UNIQUE FILES:**
+ * **1** Dashboard (index.html)
+ * **79** Content Pages
+ * **1** CSS File
+ * **1** JS File
+**TOTAL HTML FILES = 80**
+```
 
-TOTAL HTML FILES = 80
+```
