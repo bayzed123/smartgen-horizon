@@ -1,5 +1,10 @@
 [
   {
+    "title": "Add .gitkeep to blog-posts directory",
+    "date": "2026-06-02T05:04:40Z",
+    "description": "Platform improvement and optimization."
+  },
+  {
     "title": "Add script to generate blog posts and metadata",
     "date": "2026-06-02T05:03:03Z",
     "description": "This script generates HTML files for blog posts from markdown files and creates a blog.json file with post metadata."
