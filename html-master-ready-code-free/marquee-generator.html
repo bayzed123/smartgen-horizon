@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartGen Marquee Generator</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Mono&amp;display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .code-output { font-family: 'Space Mono', monospace; font-size: 12px; }
+    .tab-active { background: #0f172a; color: #38bdf8; }
+    .toast { animation: slideIn 0.3s ease, fadeOut 0.3s ease 2s forwards; }
+    @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeOut { to { opacity: 0; } }
+  </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ <script src="/_sdk/telemetry_sdk.js"></script></head>
+ <body data-template-id="__page-root" class="min-h-screen">
+  <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
+  <header class="border-b border-slate-700/50 px-6 py-4">
+   <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <h1 data-template-id="app-title" class="canva-text font-bold"></h1><button id="reset-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-600 text-sm"> <i data-lucide="rotate-ccw" style="width:14px;height:14px"></i> Reset </button>
+   </div>
+  </header>
+  <main class="max-w-7xl mx-auto p-6">
+   <div class="grid lg:grid-cols-2 gap-8"><!-- Settings -->
+    <div class="space-y-5">
+     <section data-template-id="content-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="content-title" class="canva-text font-semibold"></h2>
+      <div><label class="text-slate-300 text-sm block mb-1">Content Type</label> <select id="content-type" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-slate-200 text-sm"> <option value="text">Text</option> <option value="image">Image</option> </select>
+      </div>
+      <div id="text-input-wrap"><label class="text-slate-300 text-sm block mb-1">Marquee Text</label> <input id="marquee-text" type="text" value="HTML marquee..." class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400">
+      </div>
+      <div id="image-input-wrap" class="hidden"><label class="text-slate-300 text-sm block mb-1">Image URL</label> <input id="marquee-img" type="text" value="https://images.pexels.com/photos/128756/pexels-photo-128756.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=400" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400"> <label class="text-slate-300 text-sm block mb-1 mt-2">Alt Text</label> <input id="marquee-alt" type="text" value="Swimming fish" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400">
+      </div>
+     </section>
+     <section data-template-id="behavior-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="behavior-title" class="canva-text font-semibold"></h2>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="text-slate-300 text-sm block mb-1">Direction</label> <select id="direction" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-slate-200 text-sm"> <option value="left">Left</option> <option value="right">Right</option> <option value="up">Up</option> <option value="down">Down</option> </select>
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Behavior</label> <select id="behavior" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-1.5 text-slate-200 text-sm"> <option value="scroll">Scroll</option> <option value="slide">Slide</option> <option value="alternate">Alternate (Bounce)</option> </select>
+       </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="text-slate-300 text-sm block mb-1">Scroll Delay (ms)</label> <input id="scroll-delay" type="number" value="85" min="1" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1.5 text-slate-200 text-sm">
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Scroll Amount (px)</label> <input id="scroll-amount" type="number" value="6" min="1" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1.5 text-slate-200 text-sm">
+       </div>
+      </div>
+      <div><label class="text-slate-300 text-sm block mb-1">Loop (-1 = infinite)</label> <input id="loop" type="number" value="-1" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1.5 text-slate-200 text-sm">
+      </div>
+     </section>
+     <section data-template-id="dimensions-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="dimensions-title" class="canva-text font-semibold"></h2>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="text-slate-300 text-sm block mb-1">Width</label> <input id="m-width" type="text" value="100%" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1.5 text-slate-200 text-sm">
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Height</label> <input id="m-height" type="text" value="" placeholder="auto" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1.5 text-slate-200 text-sm">
+       </div>
+      </div>
+     </section>
+     <section data-template-id="colors-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="colors-title" class="canva-text font-semibold"></h2>
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="text-slate-300 text-sm block mb-1">Text Color</label> <input id="text-color" type="color" value="#330099" class="w-full h-9 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+       <div><label class="text-slate-300 text-sm block mb-1">Background</label> <input id="bg-color" type="color" value="#CCFFFF" class="w-full h-9 rounded cursor-pointer bg-slate-800 border border-slate-600">
+       </div>
+      </div>
+     </section>
+    </div><!-- Preview & Code -->
+    <div class="space-y-5">
+     <section data-template-id="preview-section" class="canva-section rounded-xl p-5">
+      <h2 data-template-id="preview-title" class="canva-text font-semibold mb-4"></h2>
+      <div id="preview-box" class="bg-slate-800/50 rounded-lg p-4 min-h-[100px] border border-slate-700 overflow-hidden"></div>
+     </section>
+     <section data-template-id="code-section" class="canva-section rounded-xl p-5">
+      <h2 data-template-id="code-title" class="canva-text font-semibold mb-4"></h2>
+      <pre id="code-output" class="code-output bg-slate-900 rounded-lg p-4 overflow-x-auto text-slate-300 border border-slate-700 min-h-[120px] whitespace-pre-wrap"></pre>
+      <div class="flex gap-3 mt-4"><button id="copy-btn" class="flex items-center gap-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg text-sm font-medium transition-colors"> <i data-lucide="copy" style="width:14px;height:14px"></i> Copy Code </button> <button id="download-btn" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-sm font-medium transition-colors"> <i data-lucide="download" style="width:14px;height:14px"></i> Download HTML </button>
+      </div>
+     </section><!-- Examples -->
+     <section data-template-id="examples-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="examples-title" class="canva-text font-semibold"></h2>
+      <div class="space-y-3">
+       <h3 data-template-id="ex-scroll-title" class="canva-text font-semibold text-sm"></h3>
+       <div class="bg-slate-800 rounded p-3 border border-slate-700 overflow-hidden">
+        <marquee>
+         HTML marquee...
+        </marquee>
+       </div>
+       <h3 data-template-id="ex-image-title" class="canva-text font-semibold text-sm mt-4"></h3>
+       <div class="bg-slate-800 rounded p-3 border border-slate-700 overflow-hidden">
+        <marquee>
+         <img src="https://images.pexels.com/photos/128756/pexels-photo-128756.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=400" alt="Swimming fish" style="height:60px">
+        </marquee>
+       </div>
+       <h3 data-template-id="ex-bounce-title" class="canva-text font-semibold text-sm mt-4"></h3>
+       <div class="bg-slate-800 rounded p-3 border border-slate-700 overflow-hidden">
+        <marquee behavior="alternate">
+         Bouncing text...
+        </marquee>
+       </div>
+       <h3 data-template-id="ex-vertical-title" class="canva-text font-semibold text-sm mt-4"></h3>
+       <div class="bg-slate-800 rounded p-3 border border-slate-700 overflow-hidden" style="height:80px">
+        <marquee direction="up" style="height:80px">
+         Scroll down...
+        </marquee>
+       </div>
+      </div>
+     </section>
+     <section data-template-id="docs-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="docs-title" class="canva-text font-semibold"></h2>
+      <p data-template-id="docs-intro" class="canva-text text-sm leading-relaxed"></p>
+      <h3 data-template-id="docs-css-title" class="canva-text font-semibold"></h3>
+      <p data-template-id="docs-css-text" class="canva-text text-sm leading-relaxed"></p>
+     </section>
+    </div>
+   </div>
+   <footer class="mt-10 border-t border-slate-700/50 pt-6 pb-4">
+    <p data-template-id="footer-text" class="canva-text text-center text-xs"></p>
+   </footer>
+  </main>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+    lucide.createIcons();
+
+    const $ = id => document.getElementById(id);
+
+    $('content-type').addEventListener('change', () => {
+      const isImage = $('content-type').value === 'image';
+      $('text-input-wrap').classList.toggle('hidden', isImage);
+      $('image-input-wrap').classList.toggle('hidden', !isImage);
+      update();
+    });
+
+    document.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('input', update);
+      el.addEventListener('change', update);
+    });
+
+    function update() {
+      const isImage = $('content-type').value === 'image';
+      const dir = $('direction').value;
+      const beh = $('behavior').value;
+      const delay = $('scroll-delay').value;
+      const amount = $('scroll-amount').value;
+      const loop = $('loop').value;
+      const width = $('m-width').value;
+      const height = $('m-height').value;
+      const textColor = $('text-color').value;
+      const bgColor = $('bg-color').value;
+
+      // Build content
+      let content;
+      if (isImage) {
+        const src = $('marquee-img').value;
+        const alt = $('marquee-alt').value;
+        content = `<img src="${src}" alt="${alt}" height="60">`;
+      } else {
+        content = $('marquee-text').value;
+      }
+
+      // Build attributes
+      let attrs = [];
+      if (dir !== 'left') attrs.push(`direction="${dir}"`);
+      if (beh !== 'scroll') attrs.push(`behavior="${beh}"`);
+      if (delay !== '85') attrs.push(`scrolldelay="${delay}"`);
+      if (amount !== '6') attrs.push(`scrollamount="${amount}"`);
+      if (loop !== '-1') attrs.push(`loop="${loop}"`);
+      if (width && width !== '100%') attrs.push(`width="${width}"`);
+      if (height) attrs.push(`height="${height}"`);
+      attrs.push(`bgcolor="${bgColor}"`);
+
+      const style = isImage ? '' : ` style="color:${textColor}"`;
+      const attrStr = attrs.length ? ' ' + attrs.join(' ') : '';
+      const code = `<marquee${attrStr}${style}>${content}</marquee>`;
+
+      $('code-output').textContent = code;
+
+      // Live preview
+      $('preview-box').innerHTML = code;
+    }
+
+    $('copy-btn').addEventListener('click', () => {
+      navigator.clipboard.writeText($('code-output').textContent).then(() => showToast('Copied!'));
+    });
+
+    $('download-btn').addEventListener('click', () => {
+      const code = $('code-output').textContent;
+      const blob = new Blob([`<!DOCTYPE html>\n<html><head></head><body>\n${code}\n</body></html>`], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'marquee.html';
+      a.click();
+    });
+
+    $('reset-btn').addEventListener('click', () => {
+      $('content-type').value = 'text';
+      $('text-input-wrap').classList.remove('hidden');
+      $('image-input-wrap').classList.add('hidden');
+      $('marquee-text').value = 'HTML marquee...';
+      $('direction').value = 'left';
+      $('behavior').value = 'scroll';
+      $('scroll-delay').value = '85';
+      $('scroll-amount').value = '6';
+      $('loop').value = '-1';
+      $('m-width').value = '100%';
+      $('m-height').value = '';
+      $('text-color').value = '#330099';
+      $('bg-color').value = '#CCFFFF';
+      update();
+    });
+
+    function showToast(msg) {
+      const t = document.createElement('div');
+      t.className = 'toast bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg';
+      t.textContent = msg;
+      $('toast-container').appendChild(t);
+      setTimeout(() => t.remove(), 2500);
+    }
+
+    update();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a055ebef2d1946b3',t:'MTc4MDM5NzY4Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
