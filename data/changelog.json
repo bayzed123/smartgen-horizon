@@ -1,0 +1,24 @@
+[
+  {
+    "version": "v1.2.0-beta",
+    "date": "2026-06-02",
+    "title": "New Tool Added: JSON Formatter",
+    "description": "Added a highly requested JSON Formatter tool with syntax highlighting and validation features to help developers debug faster.",
+    "changes": [
+      "Added syntax highlighting support for JSON.",
+      "Fixed minor UI bugs in the QR Generator tool.",
+      "Optimized mobile responsiveness for the navigation bar."
+    ]
+  },
+  {
+    "version": "v1.1.5-beta",
+    "date": "2026-05-28",
+    "title": "UI Improvements & Bug Fixes",
+    "description": "Focused on improving the overall user experience and fixing minor console errors reported by beta testers.",
+    "changes": [
+      "Updated the hero section with a dynamic marquee badge.",
+      "Removed Google Analytics from the staging environment to prevent data pollution.",
+      "Improved the loading speed of the search functionality."
+    ]
+  }
+]
