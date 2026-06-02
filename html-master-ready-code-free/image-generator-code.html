@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartGen Image Code Generator</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Space+Mono&amp;display=swap" rel="stylesheet">
+  <style>
+        body { font-family: 'DM Sans', sans-serif; }
+        .code-output { font-family: 'Space Mono', monospace; font-size: 12px; }
+        .tab-active { background: #0f172a; color: #38bdf8; }
+        .drop-zone.dragover { border-color: #38bdf8; background: rgba(56, 189, 248, 0.05); }
+        .preview-img { transition: all 0.3s ease; }
+        .toast { animation: slideIn 0.3s ease, fadeOut 0.3s ease 2s forwards; }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { to { opacity: 0; } }
+    </style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/resizing_sdk.js" type="text/javascript"></script>
+ <script src="/_sdk/telemetry_sdk.js"></script></head>
+ <body data-template-id="__page-root" class="min-h-screen">
+  <div id="toast-container" class="fixed top-4 right-4 z-50"></div>
+  <header class="border-b border-slate-700/50 px-6 py-4">
+   <div class="max-w-7xl mx-auto flex items-center justify-between">
+    <h1 data-template-id="app-title" class="canva-text font-bold"></h1><button id="reset-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-700/50 text-slate-300 hover:bg-slate-600 text-sm"> <i data-lucide="rotate-ccw" style="width:14px;height:14px"></i> Reset </button>
+   </div>
+  </header>
+  <main class="max-w-7xl mx-auto p-6">
+   <div class="grid lg:grid-cols-2 gap-8"><!-- Settings Panel -->
+    <div class="space-y-5">
+     <section data-template-id="settings-section" class="canva-section rounded-xl p-5 space-y-4">
+      <h2 data-template-id="settings-title" class="canva-text font-semibold text-lg"></h2><!-- Image Source -->
+      <div><label class="text-slate-300 text-sm font-medium block mb-1">Image URL</label> <input id="img-url" type="url" placeholder="https://example.com/image.jpg" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400">
+      </div>
+      <div id="drop-zone" class="drop-zone border-2 border-dashed border-slate-600 rounded-lg p-4 text-center cursor-pointer hover:border-slate-400 transition-colors"><i data-lucide="upload" style="width:24px;height:24px" class="mx-auto text-slate-400 mb-1"></i>
+       <p class="text-slate-400 text-sm">Drag &amp; drop image or click to upload</p><input id="file-input" type="file" accept="image/*" class="hidden">
+      </div><!-- Dimensions -->
+      <div class="grid grid-cols-2 gap-3">
+       <div><label class="text-slate-300 text-sm font-medium block mb-1">Width (px)</label> <input id="img-width" type="number" value="300" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400">
+       </div>
+       <div><label class="text-slate-300 text-sm font-medium block mb-1">Height (px)</label> <input id="img-height" type="number" value="225" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400">
+       </div>
+      </div><label class="flex items-center gap-2 text-slate-300 text-sm"> <input id="ratio-lock" type="checkbox" checked class="accent-sky-400"> <i data-lucide="lock" style="width:14px;height:14px"></i> Lock Aspect Ratio </label>
+      <div><label class="text-slate-300 text-sm font-medium block mb-1">Margin (px)</label> <input id="img-margin" type="number" value="10" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400">
+      </div><!-- Alt Text -->
+      <div><label class="text-slate-300 text-sm font-medium block mb-1">Alt Text</label> <input id="img-alt" type="text" placeholder="Describe the image" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400">
+       <p id="alt-warning" class="text-amber-400 text-xs mt-1 hidden"><i data-lucide="alert-triangle" style="width:12px;height:12px;display:inline"></i> SEO: Alt text is recommended for accessibility</p>
+      </div><!-- Border -->
+      <div class="space-y-3">
+       <h3 class="text-slate-300 text-sm font-semibold">Border</h3>
+       <div class="grid grid-cols-3 gap-3">
+        <div><label class="text-slate-400 text-xs block mb-1">Color</label> <input id="border-color" type="color" value="#000000" class="w-full h-8 rounded cursor-pointer bg-slate-800 border border-slate-600">
+        </div>
+        <div><label class="text-slate-400 text-xs block mb-1">Width (px)</label> <input id="border-width" type="number" value="0" min="0" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-2 py-1 text-slate-200 text-sm">
+        </div>
+        <div><label class="text-slate-400 text-xs block mb-1">Style</label> <select id="border-style" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-2 py-1 text-slate-200 text-sm"> <option>solid</option><option>dashed</option><option>dotted</option><option>double</option><option>none</option> </select>
+        </div>
+       </div>
+       <div><label class="text-slate-400 text-xs block mb-1">Border Radius (px)</label> <input id="border-radius" type="range" min="0" max="100" value="0" class="w-full accent-sky-400"> <span id="radius-val" class="text-slate-400 text-xs">0px</span>
+       </div>
+      </div><!-- Shadow -->
+      <div class="space-y-3">
+       <h3 class="text-slate-300 text-sm font-semibold">Shadow</h3>
+       <div class="grid grid-cols-4 gap-2">
+        <div>
+         <label class="text-slate-400 text-xs block mb-1">X</label><input id="shadow-x" type="number" value="0" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-slate-200 text-xs">
+        </div>
+        <div>
+         <label class="text-slate-400 text-xs block mb-1">Y</label><input id="shadow-y" type="number" value="0" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-slate-200 text-xs">
+        </div>
+        <div>
+         <label class="text-slate-400 text-xs block mb-1">Blur</label><input id="shadow-blur" type="number" value="0" class="w-full bg-slate-800 border border-slate-600 rounded px-2 py-1 text-slate-200 text-xs">
+        </div>
+        <div>
+         <label class="text-slate-400 text-xs block mb-1">Color</label><input id="shadow-color" type="color" value="#000000" class="w-full h-7 rounded cursor-pointer bg-slate-800 border border-slate-600">
+        </div>
+       </div>
+      </div><!-- Hover Effect -->
+      <div><label class="text-slate-300 text-sm font-medium block mb-1">Hover Effect</label> <select id="hover-effect" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm"> <option value="none">None</option> <option value="opacity">Opacity</option> <option value="scale">Scale Up</option> <option value="shadow">Shadow</option> <option value="brightness">Brightness</option> </select>
+      </div><!-- Link -->
+      <div class="space-y-3">
+       <h3 class="text-slate-300 text-sm font-semibold">Link Wrapper</h3><input id="link-url" type="url" placeholder="https://destination.com" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm focus:outline-none focus:border-sky-400"> <select id="link-target" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-3 py-2 text-slate-200 text-sm"> <option value="_self">Same Window</option> <option value="_blank">New Window</option> <option value="_parent">Parent</option> <option value="_top">Top</option> </select>
+      </div><!-- Toggles -->
+      <div class="flex flex-wrap gap-4"><label class="flex items-center gap-2 text-slate-300 text-sm"><input id="lazy-load" type="checkbox" checked class="accent-sky-400"> Lazy Loading</label> <label class="flex items-center gap-2 text-slate-300 text-sm"><input id="responsive" type="checkbox" class="accent-sky-400"> Responsive</label>
+      </div>
+     </section>
+    </div><!-- Preview -->
+    <div class="space-y-5">
+     <section data-template-id="preview-section" class="canva-section rounded-xl p-5">
+      <h2 data-template-id="preview-title" class="canva-text font-semibold text-lg mb-4"></h2>
+      <div class="flex items-center gap-2 mb-3"><button class="preview-mode-btn px-3 py-1 rounded text-xs bg-sky-500/20 text-sky-300" data-mode="desktop"><i data-lucide="monitor" style="width:14px;height:14px;display:inline"></i></button> <button class="preview-mode-btn px-3 py-1 rounded text-xs bg-slate-700 text-slate-400" data-mode="tablet"><i data-lucide="tablet" style="width:14px;height:14px;display:inline"></i></button> <button class="preview-mode-btn px-3 py-1 rounded text-xs bg-slate-700 text-slate-400" data-mode="mobile"><i data-lucide="smartphone" style="width:14px;height:14px;display:inline"></i></button>
+      </div>
+      <div id="preview-container" class="bg-slate-800/50 rounded-lg p-6 flex items-center justify-center min-h-[300px] overflow-auto border border-slate-700">
+       <div id="preview-wrapper"><img id="preview-img" src="https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=800" alt="Sample Image" class="preview-img">
+       </div>
+      </div>
+      <div id="dimensions-info" class="mt-2 text-slate-400 text-xs"></div>
+      <div id="accessibility-check" class="mt-2 text-xs"></div>
+     </section>
+    </div>
+   </div><!-- Code Output -->
+   <section data-template-id="code-section" class="canva-section rounded-xl p-5 mt-8">
+    <h2 data-template-id="code-title" class="canva-text font-semibold text-lg mb-4"></h2>
+    <div class="flex gap-1 mb-3"><button class="code-tab tab-active px-4 py-1.5 rounded-lg text-sm font-medium" data-tab="html">HTML</button> <button class="code-tab px-4 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300" data-tab="css">CSS</button> <button class="code-tab px-4 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300" data-tab="full">Full Code</button>
+    </div>
+    <pre id="code-output" class="code-output bg-slate-900 rounded-lg p-4 overflow-x-auto text-slate-300 border border-slate-700 min-h-[120px] whitespace-pre-wrap"></pre>
+    <div class="flex gap-3 mt-4"><button id="copy-btn" class="flex items-center gap-2 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg text-sm font-medium transition-colors"> <i data-lucide="copy" style="width:14px;height:14px"></i> Copy Code </button> <button id="download-btn" class="flex items-center gap-2 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-sm font-medium transition-colors"> <i data-lucide="download" style="width:14px;height:14px"></i> Download HTML </button>
+    </div>
+   </section><!-- Footer -->
+   <footer class="mt-10 border-t border-slate-700/50 pt-6 pb-4">
+    <div class="grid md:grid-cols-2 gap-6">
+     <div>
+      <h3 data-template-id="docs-title" class="canva-text font-semibold mb-2"></h3>
+      <p data-template-id="docs-text" class="canva-text text-sm leading-relaxed"></p>
+     </div>
+     <div>
+      <h3 data-template-id="css-docs-title" class="canva-text font-semibold mb-2"></h3>
+      <p data-template-id="css-docs-text" class="canva-text text-sm leading-relaxed"></p>
+     </div>
+    </div>
+    <p data-template-id="footer-text" class="canva-text text-center text-xs mt-6"></p>
+   </footer>
+  </main>
+  <script src="/_sdk/editing_sdk.js"></script>
+  <script>
+        lucide.createIcons();
+
+        const els = {
+            url: document.getElementById('img-url'),
+            file: document.getElementById('file-input'),
+            dropZone: document.getElementById('drop-zone'),
+            width: document.getElementById('img-width'),
+            height: document.getElementById('img-height'),
+            ratioLock: document.getElementById('ratio-lock'),
+            margin: document.getElementById('img-margin'),
+            alt: document.getElementById('img-alt'),
+            borderColor: document.getElementById('border-color'),
+            borderWidth: document.getElementById('border-width'),
+            borderStyle: document.getElementById('border-style'),
+            borderRadius: document.getElementById('border-radius'),
+            shadowX: document.getElementById('shadow-x'),
+            shadowY: document.getElementById('shadow-y'),
+            shadowBlur: document.getElementById('shadow-blur'),
+            shadowColor: document.getElementById('shadow-color'),
+            hoverEffect: document.getElementById('hover-effect'),
+            linkUrl: document.getElementById('link-url'),
+            linkTarget: document.getElementById('link-target'),
+            lazyLoad: document.getElementById('lazy-load'),
+            responsive: document.getElementById('responsive'),
+            preview: document.getElementById('preview-img'),
+            previewWrapper: document.getElementById('preview-wrapper'),
+            previewContainer: document.getElementById('preview-container'),
+            codeOutput: document.getElementById('code-output'),
+            altWarning: document.getElementById('alt-warning'),
+            radiusVal: document.getElementById('radius-val'),
+            dimensionsInfo: document.getElementById('dimensions-info'),
+            accessibilityCheck: document.getElementById('accessibility-check')
+        };
+
+        let aspectRatio = 300 / 225;
+        let currentTab = 'html';
+        let naturalW = 0, naturalH = 0;
+
+        // Drag & drop
+        els.dropZone.addEventListener('click', () => els.file.click());
+        els.dropZone.addEventListener('dragover', e => { e.preventDefault(); els.dropZone.classList.add('dragover'); });
+        els.dropZone.addEventListener('dragleave', () => els.dropZone.classList.remove('dragover'));
+        els.dropZone.addEventListener('drop', e => {
+            e.preventDefault(); els.dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) handleFile(file);
+        });
+        els.file.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = e => { els.url.value = e.target.result; updatePreview(); };
+            reader.readAsDataURL(file);
+        }
+
+        // Auto-detect dimensions
+        els.url.addEventListener('change', () => {
+            const img = new Image();
+            img.onload = () => {
+                naturalW = img.naturalWidth; naturalH = img.naturalHeight;
+                if (naturalW && naturalH) {
+                    els.width.value = Math.min(naturalW, 600);
+                    els.height.value = Math.round(Math.min(naturalW, 600) * (naturalH / naturalW));
+                    aspectRatio = naturalW / naturalH;
+                }
+                updatePreview();
+            };
+            img.onerror = () => updatePreview();
+            img.src = els.url.value;
+        });
+
+        // Ratio lock
+        els.width.addEventListener('input', () => {
+            if (els.ratioLock.checked) els.height.value = Math.round(els.width.value / aspectRatio);
+            updatePreview();
+        });
+        els.height.addEventListener('input', () => {
+            if (els.ratioLock.checked) els.width.value = Math.round(els.height.value * aspectRatio);
+            updatePreview();
+        });
+
+        // Border radius display
+        els.borderRadius.addEventListener('input', () => { els.radiusVal.textContent = els.borderRadius.value + 'px'; updatePreview(); });
+
+        // All inputs update preview
+        [els.margin, els.alt, els.borderColor, els.borderWidth, els.borderStyle,
+         els.shadowX, els.shadowY, els.shadowBlur, els.shadowColor, els.hoverEffect,
+         els.linkUrl, els.linkTarget, els.lazyLoad, els.responsive].forEach(el => {
+            el.addEventListener('input', updatePreview);
+            el.addEventListener('change', updatePreview);
+        });
+
+        // Preview modes
+        document.querySelectorAll('.preview-mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.preview-mode-btn').forEach(b => { b.className = 'preview-mode-btn px-3 py-1 rounded text-xs bg-slate-700 text-slate-400'; });
+                btn.className = 'preview-mode-btn px-3 py-1 rounded text-xs bg-sky-500/20 text-sky-300';
+                const mode = btn.dataset.mode;
+                els.previewContainer.style.maxWidth = mode === 'mobile' ? '375px' : mode === 'tablet' ? '768px' : 'none';
+            });
+        });
+
+        // Code tabs
+        document.querySelectorAll('.code-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.code-tab').forEach(t => { t.className = 'code-tab px-4 py-1.5 rounded-lg text-sm font-medium bg-slate-700 text-slate-300'; });
+                tab.className = 'code-tab tab-active px-4 py-1.5 rounded-lg text-sm font-medium';
+                currentTab = tab.dataset.tab;
+                updatePreview();
+            });
+        });
+
+        function getStyles() {
+            const w = els.width.value, h = els.height.value, m = els.margin.value;
+            const bc = els.borderColor.value, bw = els.borderWidth.value, bs = els.borderStyle.value;
+            const br = els.borderRadius.value;
+            const sx = els.shadowX.value, sy = els.shadowY.value, sb = els.shadowBlur.value, sc = els.shadowColor.value;
+            const isResponsive = els.responsive.checked;
+
+            let css = '';
+            css += isResponsive ? `  width: 100%;\n  max-width: ${w}px;\n  height: auto;\n` : `  width: ${w}px;\n  height: ${h}px;\n`;
+            if (+m) css += `  margin: ${m}px;\n`;
+            if (+bw) css += `  border: ${bw}px ${bs} ${bc};\n`;
+            if (+br) css += `  border-radius: ${br}px;\n`;
+            if (+sx || +sy || +sb) css += `  box-shadow: ${sx}px ${sy}px ${sb}px ${sc};\n`;
+
+            const hover = els.hoverEffect.value;
+            let hoverCss = '';
+            if (hover === 'opacity') hoverCss = '  opacity: 0.7;\n';
+            else if (hover === 'scale') hoverCss = '  transform: scale(1.05);\n';
+            else if (hover === 'shadow') hoverCss = '  box-shadow: 0 8px 25px rgba(0,0,0,0.3);\n';
+            else if (hover === 'brightness') hoverCss = '  filter: brightness(1.2);\n';
+
+            return { css, hoverCss, hover };
+        }
+
+        function generateCode() {
+            const src = els.url.value || 'https://example.com/image.jpg';
+            const alt = els.alt.value || 'Image';
+            const lazy = els.lazyLoad.checked;
+            const linkUrl = els.linkUrl.value;
+            const target = els.linkTarget.value;
+            const { css, hoverCss, hover } = getStyles();
+
+            let imgAttrs = `src="${src}"\n  alt="${alt}"\n  class="generated-image"`;
+            if (lazy) imgAttrs += `\n  loading="lazy"`;
+
+            let htmlCode = `<img\n  ${imgAttrs}\n>`;
+            if (linkUrl) {
+                htmlCode = `<a href="${linkUrl}" target="${target}"${target === '_blank' ? ' rel="noopener noreferrer"' : ''}>\n  ${htmlCode}\n</a>`;
+            }
+
+            let cssCode = `.generated-image {\n${css}  transition: all 0.3s ease;\n}`;
+            if (hover !== 'none') cssCode += `\n\n.generated-image:hover {\n${hoverCss}}`;
+
+            const fullCode = `<style>\n${cssCode}\n</style>\n\n${htmlCode}`;
+
+            return { html: htmlCode, css: cssCode, full: fullCode };
+        }
+
+        function updatePreview() {
+            const src = els.url.value || 'https://images.pexels.com/photos/3225517/pexels-photo-3225517.jpeg?auto=compress&cs=tinysrgb&w=800';
+            const { css, hoverCss, hover } = getStyles();
+            const img = els.preview;
+
+            img.src = src;
+            img.alt = els.alt.value || 'Preview';
+            img.style.cssText = css.replace(/  /g, '').replace(/\n/g, '');
+            img.style.transition = 'all 0.3s ease';
+
+            // Hover effect via events
+            img.onmouseenter = hover !== 'none' ? () => { img.style.cssText += hoverCss.replace(/  /g, '').replace(/\n/g, ''); } : null;
+            img.onmouseleave = hover !== 'none' ? () => { img.style.cssText = css.replace(/  /g, '').replace(/\n/g, '') + 'transition:all 0.3s ease;'; } : null;
+
+            // Link wrapper
+            if (els.linkUrl.value) {
+                if (!els.previewWrapper.querySelector('a')) {
+                    const a = document.createElement('a');
+                    a.href = els.linkUrl.value; a.target = els.linkTarget.value;
+                    els.previewWrapper.innerHTML = '';
+                    a.appendChild(img); els.previewWrapper.appendChild(a);
+                }
+            } else {
+                if (els.previewWrapper.querySelector('a')) {
+                    els.previewWrapper.innerHTML = '';
+                    els.previewWrapper.appendChild(img);
+                }
+            }
+
+            // Alt text warning
+            els.altWarning.classList.toggle('hidden', !!els.alt.value);
+
+            // Dimensions info
+            els.dimensionsInfo.textContent = `Dimensions: ${els.width.value}×${els.height.value}px${naturalW ? ` (Original: ${naturalW}×${naturalH})` : ''}`;
+
+            // Accessibility
+            let accMsg = '';
+            if (!els.alt.value) accMsg += '⚠️ Missing alt text. ';
+            if (els.linkUrl.value && !els.alt.value) accMsg += '⚠️ Linked image needs alt text. ';
+            if (!accMsg) accMsg = '✅ Accessibility checks passed.';
+            els.accessibilityCheck.innerHTML = `<span class="${accMsg.includes('⚠️') ? 'text-amber-400' : 'text-emerald-400'}">${accMsg}</span>`;
+
+            // Code output
+            const code = generateCode();
+            els.codeOutput.textContent = code[currentTab];
+        }
+
+        // Copy
+        document.getElementById('copy-btn').addEventListener('click', () => {
+            const code = generateCode();
+            navigator.clipboard.writeText(code[currentTab]).then(() => showToast('Copied!'));
+        });
+
+        // Download
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const code = generateCode();
+            const blob = new Blob([`<!DOCTYPE html>\n<html><head><style>\n${code.css}\n</style></head><body>\n${code.html}\n</body></html>`], { type: 'text/html' });
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'image-code.html'; a.click();
+        });
+
+        // Reset
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            els.url.value = ''; els.width.value = 300; els.height.value = 225; els.margin.value = 10;
+            els.alt.value = ''; els.borderColor.value = '#000000'; els.borderWidth.value = 0;
+            els.borderStyle.value = 'solid'; els.borderRadius.value = 0; els.radiusVal.textContent = '0px';
+            els.shadowX.value = 0; els.shadowY.value = 0; els.shadowBlur.value = 0; els.shadowColor.value = '#000000';
+            els.hoverEffect.value = 'none'; els.linkUrl.value = ''; els.linkTarget.value = '_self';
+            els.lazyLoad.checked = true; els.responsive.checked = false;
+            aspectRatio = 300 / 225; naturalW = 0; naturalH = 0;
+            updatePreview();
+        });
+
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.className = 'toast bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg';
+            t.textContent = msg;
+            document.getElementById('toast-container').appendChild(t);
+            setTimeout(() => t.remove(), 2500);
+        }
+
+        updatePreview();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a055494d4b24f27f',t:'MTc4MDM5MTAyMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
