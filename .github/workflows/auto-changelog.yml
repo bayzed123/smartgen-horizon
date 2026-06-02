@@ -55,4 +55,5 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data/changelog.json index.html assets/js/search-data.js
           git commit -m "chore: update changelog and tools grid [skip ci]" || exit 0
+          git pull --rebase origin main
           git push
