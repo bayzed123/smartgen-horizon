@@ -1,0 +1,121 @@
+id: iphone13pro-display-test
+name: iPhone 13 Pro Display Test Pattern
+type: svg
+content: |-
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1170 2532" width="1170" height="2532">
+    <!-- Base pure black background for OLED bleed test -->
+    <rect x="0" y="0" width="1170" height="2532" fill="#000000"/>
+
+    <!-- ===== SECTION 1: Pure Black + Grid lines (top area) ===== -->
+    <g>
+      <text x="30" y="50" fill="#ffffff" font-size="24" font-family="Arial">1. Black + Grid (Dead Pixel / Bleed Test)</text>
+      <rect x="20" y="70" width="1130" height="380" fill="#000000" stroke="#ffffff" stroke-width="2"/>
+      <!-- Vertical thin white grid lines -->
+      <g stroke="#ffffff" stroke-width="1">
+        <line x1="70"  y1="70" x2="70"  y2="450"/>
+        <line x1="170" y1="70" x2="170" y2="450"/>
+        <line x1="270" y1="70" x2="270" y2="450"/>
+        <line x1="370" y1="70" x2="370" y2="450"/>
+        <line x1="470" y1="70" x2="470" y2="450"/>
+        <line x1="570" y1="70" x2="570" y2="450"/>
+        <line x1="670" y1="70" x2="670" y2="450"/>
+        <line x1="770" y1="70" x2="770" y2="450"/>
+        <line x1="870" y1="70" x2="870" y2="450"/>
+        <line x1="970" y1="70" x2="970" y2="450"/>
+        <line x1="1070" y1="70" x2="1070" y2="450"/>
+      </g>
+      <!-- Horizontal thin white grid lines -->
+      <g stroke="#ffffff" stroke-width="1">
+        <line x1="20" y1="130" x2="1150" y2="130"/>
+        <line x1="20" y1="190" x2="1150" y2="190"/>
+        <line x1="20" y1="250" x2="1150" y2="250"/>
+        <line x1="20" y1="310" x2="1150" y2="310"/>
+        <line x1="20" y1="370" x2="1150" y2="370"/>
+      </g>
+      <!-- Pink/Red dead-pixel test spots -->
+      <circle cx="120"  cy="150" r="6" fill="#ff2d95"/>
+      <circle cx="320"  cy="220" r="6" fill="#ff2d95"/>
+      <circle cx="520"  cy="330" r="6" fill="#ff2d95"/>
+      <circle cx="720"  cy="180" r="6" fill="#ff2d95"/>
+      <circle cx="920"  cy="290" r="6" fill="#ff2d95"/>
+      <circle cx="1050" cy="140" r="6" fill="#ff2d95"/>
+      <circle cx="220"  cy="400" r="6" fill="#ff2d95"/>
+      <circle cx="620"  cy="410" r="6" fill="#ff2d95"/>
+      <circle cx="980"  cy="400" r="6" fill="#ff2d95"/>
+    </g>
+
+    <!-- ===== SECTION 2: Grey scale gradient ===== -->
+    <g>
+      <text x="30" y="500" fill="#ffffff" font-size="24" font-family="Arial">2. Grey Scale Gradient (Banding Test)</text>
+      <defs>
+        <linearGradient id="greyGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"  stop-color="#000000"/>
+          <stop offset="20%" stop-color="#333333"/>
+          <stop offset="40%" stop-color="#666666"/>
+          <stop offset="60%" stop-color="#999999"/>
+          <stop offset="80%" stop-color="#cccccc"/>
+          <stop offset="100%" stop-color="#ffffff"/>
+        </linearGradient>
+      </defs>
+      <rect x="20" y="520" width="1130" height="120" fill="url(#greyGrad)" stroke="#ffffff" stroke-width="2"/>
+    </g>
+
+    <!-- ===== SECTION 3: RGB Primary blocks ===== -->
+    <g>
+      <text x="30" y="690" fill="#ffffff" font-size="24" font-family="Arial">3. RGB Primary Color Accuracy</text>
+      <rect x="20"  y="710" width="360" height="150" fill="#ff0000"/>
+      <rect x="395" y="710" width="360" height="150" fill="#00ff00"/>
+      <rect x="770" y="710" width="380" height="150" fill="#0000ff"/>
+    </g>
+
+    <!-- ===== SECTION 4: Secondary Colors incl Pink ===== -->
+    <g>
+      <text x="30" y="900" fill="#ffffff" font-size="24" font-family="Arial">4. Secondary Colors (Pink / Cyan / Yellow / White)</text>
+      <rect x="20"  y="920" width="273" height="150" fill="#ff2d95"/>
+      <rect x="308" y="920" width="273" height="150" fill="#00ffff"/>
+      <rect x="596" y="920" width="273" height="150" fill="#ffff00"/>
+      <rect x="884" y="920" width="266" height="150" fill="#ffffff"/>
+    </g>
+
+    <!-- ===== SECTION 5: Fine diagonal lines for uniformity ===== -->
+    <g>
+      <text x="30" y="1130" fill="#ffffff" font-size="24" font-family="Arial">5. Diagonal Lines (Uniformity / Scratch Test)</text>
+      <rect x="20" y="1150" width="1130" height="300" fill="#101010" stroke="#ffffff" stroke-width="2"/>
+      <g stroke="#ffffff" stroke-width="1">
+        <line x1="20"  y1="1450" x2="320" y2="1150"/>
+        <line x1="120" y1="1450" x2="420" y2="1150"/>
+        <line x1="220" y1="1450" x2="520" y2="1150"/>
+        <line x1="320" y1="1450" x2="620" y2="1150"/>
+        <line x1="420" y1="1450" x2="720" y2="1150"/>
+        <line x1="520" y1="1450" x2="820" y2="1150"/>
+        <line x1="620" y1="1450" x2="920" y2="1150"/>
+        <line x1="720" y1="1450" x2="1020" y2="1150"/>
+        <line x1="820" y1="1450" x2="1120" y2="1150"/>
+        <line x1="920" y1="1450" x2="1150" y2="1180"/>
+      </g>
+      <!-- More pink dots for dead pixel check inside diagonal zone -->
+      <circle cx="150" cy="1250" r="5" fill="#ff2d95"/>
+      <circle cx="450" cy="1350" r="5" fill="#ff2d95"/>
+      <circle cx="750" cy="1250" r="5" fill="#ff2d95"/>
+      <circle cx="1000" cy="1350" r="5" fill="#ff2d95"/>
+    </g>
+
+    <!-- ===== SECTION 6: Full black bottom zone for burn-in/uniformity final check ===== -->
+    <g>
+      <text x="30" y="1500" fill="#ffffff" font-size="24" font-family="Arial">6. Pure Black Zone (Final OLED Check)</text>
+      <rect x="20" y="1520" width="1130" height="950" fill="#000000" stroke="#444444" stroke-width="2"/>
+      <!-- scattered pink dead-pixel test spots across large black area -->
+      <circle cx="100"  cy="1600" r="6" fill="#ff2d95"/>
+      <circle cx="300"  cy="1750" r="6" fill="#ff2d95"/>
+      <circle cx="500"  cy="1900" r="6" fill="#ff2d95"/>
+      <circle cx="700"  cy="2050" r="6" fill="#ff2d95"/>
+      <circle cx="900"  cy="2200" r="6" fill="#ff2d95"/>
+      <circle cx="1050" cy="1650" r="6" fill="#ff2d95"/>
+      <circle cx="200"  cy="2300" r="6" fill="#ff2d95"/>
+      <circle cx="600"  cy="2400" r="6" fill="#ff2d95"/>
+      <circle cx="1000" cy="2400" r="6" fill="#ff2d95"/>
+      <circle cx="400"  cy="2100" r="6" fill="#ff2d95"/>
+      <circle cx="800"  cy="1800" r="6" fill="#ff2d95"/>
+      <text x="330" y="2470" fill="#666666" font-size="20" font-family="Arial">Pan slowly &amp; check every pink dot / grey line clearly</text>
+    </g>
+  </svg>
