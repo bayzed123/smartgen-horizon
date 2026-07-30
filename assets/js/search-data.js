@@ -17,14 +17,14 @@ const TOOLS_INDEX = [
     },
     {
         "id": "pinterest-downloader-tools",
-        "title": "PinFetch Pro // Premium Pinterest Downloader",
+        "title": "PinFetch Pro – Pinterest Video &amp; Image Downloader",
         "category": "Beta Testing",
         "keywords": [
             "pinterest-downloader-tools",
             "tool",
             "beta"
         ],
-        "description": "Beta testing tool under development.",
+        "description": "Download Pinterest photos, videos, and looping GIFs in original quality, free and watermark-free. Paste any pin link and save it in seconds.",
         "url": "./pinterest-downloader-tools/",
         "icon": "🔧"
     },
