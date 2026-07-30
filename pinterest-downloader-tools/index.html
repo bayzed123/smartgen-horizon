@@ -3,150 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartGen Pinterest Raw Extractor</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>PinFetch Pro // Premium Pinterest Downloader</title>
+    
+    <!-- Open Graph Meta Tags for GitHub Social Preview -->
+    <meta property="og:title" content="PinFetch Pro - Ultimate Pinterest Downloader">
+    <meta property="og:description" content="Download Pinterest images, high-res videos, loops, and animated GIFs instantly right from your browser.">
+    <meta property="og:type" content="website">
+
     <style>
-        body { background-color: #0f172a; color: #f8fafc; }
-        .loader { border-top-color: #3b82f6; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        :root {
+            --brand-red: #e60023;
+            --brand-hover: #b8001a;
+            --bg-color: #111111;
+            --card-bg: #222222;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --accent-glow: rgba(230, 0, 35, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient Motion Background Blur */
+        body::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at 10% 20%, rgba(230, 0, 35, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(0, 118, 255, 0.05) 0%, transparent 40%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .app-container {
+            max-width: 550px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 35px;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+            text-align: center;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUpUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Branding Styles matching Pinterest Vibe */
+        .brand-header {
+            margin-bottom: 30px;
+        }
+
+        .logo-mark {
+            width: 48px;
+            height: 48px;
+            background: var(--brand-red);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 26px;
+            color: white;
+            margin-bottom: 12px;
+            box-shadow: 0 0 20px var(--accent-glow);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-mark:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Customizable Interface Accent Picker */
+        .color-picker-tray {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .color-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .color-dot:hover { transform: scale(1.2); }
+        .color-dot.active { border-color: white; transform: scale(1.1); }
+
+        /* Input Controls & Interaction */
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 16px 20px;
+            background: #1a1a1a;
+            border: 2px solid transparent;
+            border-radius: 18px;
+            font-size: 15px;
+            color: white;
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--brand-red);
+            background: #111;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        button.action-btn {
+            background-color: var(--brand-red);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 18px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(230, 0, 35, 0.2);
+        }
+
+        button.action-btn:hover {
+            background-color: var(--brand-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--accent-glow);
+        }
+
+        button.action-btn:active { transform: translateY(1px); }
+
+        /* Smooth CSS Loading Motion */
+        #loader {
+            display: none;
+            margin: 25px 0;
+        }
+
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--brand-red);
+            border-radius: 50%;
+            margin: 0 auto 10px auto;
+            animation: spin 0.8s linear infinite;
+        }
+
+        /* Media Presentation Output Area */
+        #result {
+            margin-top: 30px;
+            display: none;
+            text-align: left;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .preview-container {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #111;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .preview-box {
+            width: 100%;
+            max-height: 400px;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* Guidelines & Metadata Rules Board */
+        .guidelines-card {
+            margin-top: 35px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: left;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .guidelines-card h4 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .guidelines-list {
+            list-style: none;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .guidelines-list li {
+            margin-bottom: 8px;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .guidelines-list li::before {
+            content: "•";
+            color: var(--brand-red);
+            position: absolute;
+            left: 5px;
+            font-weight: bold;
+        }
+
+        .error { color: #ff3333; font-size: 13px; margin-top: 12px; font-weight: 500; }
+
+        /* Keyframe Motion Systems */
+        @keyframes slideUpUp {
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center justify-center p-4">
+<body>
 
-    <div class="max-w-2xl w-full bg-slate-800 rounded-xl shadow-2xl p-8 border border-slate-700">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-white mb-2">🚀 SmartGen Tools</h1>
-            <p class="text-slate-400">Pinterest HD Downloader (Client-Side Proxied)</p>
+    <div class="app-container">
+        <!-- Visual Brand Header Area -->
+        <div class="brand-header">
+            <div class="logo-mark" id="brandLogo">P</div>
+            <h1>PinFetch Pro</h1>
+            <p class="subtitle">Extract and save high-fidelity visual streams instantly.</p>
         </div>
 
-        <div class="flex flex-col gap-4">
-            <input type="url" id="pin-url" placeholder="Paste Pinterest URL here (e.g., https://pin.it/...)" 
-                class="w-full px-4 py-3 bg-slate-900 border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500 text-white placeholder-slate-500">
-            
-            <button onclick="extractMedia()" id="extract-btn"
-                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors flex justify-center items-center gap-2">
-                <span>Extract Raw File</span>
-            </button>
+        <!-- Custom Style Customization Engine -->
+        <div class="color-picker-tray">
+            <div class="color-dot active" style="background: #e60023;" onclick="changeTheme('#e60023', this)"></div>
+            <div class="color-dot" style="background: #ff5a5f;" onclick="changeTheme('#ff5a5f', this)"></div>
+            <div class="color-dot" style="background: #0076ff;" onclick="changeTheme('#0076ff', this)"></div>
+            <div class="color-dot" style="background: #00b0ff;" onclick="changeTheme('#00b0ff', this)"></div>
+            <div class="color-dot" style="background: #7b2cbf;" onclick="changeTheme('#7b2cbf', this)"></div>
+        </div>
+        
+        <!-- Input & Form Controls Component -->
+        <div class="input-wrapper">
+            <input type="text" id="pinUrl" placeholder="Paste Pinterest link (Pin, Video, or GIF)..." />
+            <div id="errorLog" class="error"></div>
+        </div>
+        <button class="action-btn" id="extractBtn" onclick="extractMedia()">Fetch Stream Assets</button>
+
+        <!-- Dynamic UI Motion Loader -->
+        <div id="loader">
+            <div class="spinner"></div>
+            <p class="subtitle">Decoding media wrappers...</p>
         </div>
 
-        <!-- Loading State -->
-        <div id="loading" class="hidden mt-8 flex flex-col items-center">
-            <div class="loader ease-linear rounded-full border-4 border-t-4 border-slate-600 h-10 w-10 mb-4"></div>
-            <p class="text-slate-400 text-sm mt-2">Bypassing Pinterest Security (This may take a few seconds)...</p>
+        <!-- Clean Interactive Output Result Card -->
+        <div id="result">
+            <div class="preview-container" id="mediaPreviewContainer"></div>
+            <button class="action-btn" id="downloadBtn" style="background-color: #0076ff; box-shadow: 0 4px 12px rgba(0,118,255,0.3);">Save Component To Device</button>
         </div>
 
-        <!-- Result Container -->
-        <div id="result-container" class="hidden mt-8 text-center bg-slate-900 p-6 rounded-lg border border-slate-700">
-            <h3 class="text-xl font-bold text-green-400 mb-4">✅ Extraction Successful!</h3>
-            
-            <div id="media-preview" class="mb-6 flex justify-center"></div>
-            
-            <a id="download-link" href="#" target="_blank" 
-                class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
-                Open / Download HD File
-            </a>
-            <p class="text-xs text-slate-500 mt-3">Click to open, then long-press or Right-click and "Save As".</p>
-        </div>
-
-        <!-- Error Container -->
-        <div id="error-container" class="hidden mt-8 text-center bg-red-900/30 border border-red-500/50 p-4 rounded-lg text-red-400">
-        </div>
-    </div>
-
-    <script>
-        // Fallback proxy list to ensure better reliability on client-side
-        const PROXIES = [
-            "https://corsproxy.io/?",
-            "https://api.allorigins.win/raw?url="
-        ];
-
-        async function fetchWithProxy(url) {
-            for (let proxy of PROXIES) {
-                try {
-                    const response = await fetch(proxy + encodeURIComponent(url));
-                    if (response.ok) {
-                        return await response.text();
-                    }
-                } catch (e) {
-                    console.warn(`Proxy ${proxy} failed, trying next...`);
-                }
-            }
-            throw new Error("Network error or Pinterest blocked the request. Try again later.");
-        }
-
-        async function extractMedia() {
-            const urlInput = document.getElementById('pin-url').value.trim();
-            const loading = document.getElementById('loading');
-            const resultDiv = document.getElementById('result-container');
-            const errorDiv = document.getElementById('error-container');
-            const btn = document.getElementById('extract-btn');
-
-            if (!urlInput || !urlInput.includes("pin")) {
-                alert("Please enter a valid Pinterest URL.");
-                return;
-            }
-
-            resultDiv.classList.add('hidden');
-            errorDiv.classList.add('hidden');
-            loading.classList.remove('hidden');
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
-
-            try {
-                // Fetch the HTML content using our proxy fallback system
-                const html = await fetchWithProxy(urlInput);
-                
-                // Parse the fetched HTML
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, "text/html");
-                
-                let rawUrl = "";
-                let type = "";
-                let preview = "";
-
-                // Look for Video Meta Tag first
-                const videoTag = doc.querySelector('meta[property="og:video"]');
-                const imageTag = doc.querySelector('meta[property="og:image"]');
-                
-                // Some shortlinks redirect to a page with data in a JSON script
-                const nextData = doc.getElementById('__PWS_DATA__');
-
-                if (videoTag) {
-                    type = "video";
-                    rawUrl = videoTag.content;
-                    preview = rawUrl;
-                } else if (imageTag) {
-                    type = "image";
-                    let compressedUrl = imageTag.content;
-                    // Force original resolution
-                    rawUrl = compressedUrl.replace(/\/[0-9]+x\//, '/originals/');
-                    preview = compressedUrl;
-                } else {
-                    throw new Error("Media not found. The Pin might be private, deleted, or a complex Idea Pin.");
-                }
-
-                // Update UI with results
-                document.getElementById('download-link').href = rawUrl;
-                const previewDiv = document.getElementById('media-preview');
-                
-                if (type === 'video') {
-                    previewDiv.innerHTML = '<span class="text-5xl">🎥</span><br><span class="text-sm text-slate-400 mt-2">HD Video Ready</span>';
-                } else {
-                    previewDiv.innerHTML = `<img src="${preview}" class="max-h-64 rounded-md shadow-md border border-slate-600">`;
-                }
-
-                loading.classList.add('hidden');
-                resultDiv.classList.remove('hidden');
-
-            } catch (err) {
-                loading.classList.add('hidden');
-                errorDiv.innerText = "Error extracting file: " + err.message;
-                errorDiv.classList.remove('hidden');
-            } finally {
-                btn.disabled = false;
-                btn.classList.remove('opacity-50');
-            }
-        }
-    </script>
-</body>
-</html>
+        <!-- Meta Structural System Rules and Guidelines Panel -->
