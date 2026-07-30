@@ -7,6 +7,7 @@
 ./updates/index.html
 ./index.html
 ./txt-to-markdown-generate/index.html
+./pinterest-downloader-tools/index.html
 ./master-html-playground-snippet-library/html-link-generator.html
 ./master-html-playground-snippet-library/index.html
 ./cookies/index.html

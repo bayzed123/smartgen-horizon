@@ -16,6 +16,19 @@ const TOOLS_INDEX = [
         "icon": "💻"
     },
     {
+        "id": "pinterest-downloader-tools",
+        "title": "SmartGen Pinterest Raw Extractor",
+        "category": "Beta Testing",
+        "keywords": [
+            "pinterest-downloader-tools",
+            "tool",
+            "beta"
+        ],
+        "description": "Beta testing tool under development.",
+        "url": "./pinterest-downloader-tools/",
+        "icon": "🔧"
+    },
+    {
         "id": "txt-to-markdown-generate",
         "title": "Plain Text to Markdown",
         "category": "Beta Testing",
