@@ -17,7 +17,7 @@ const TOOLS_INDEX = [
     },
     {
         "id": "pinterest-downloader-tools",
-        "title": "SmartGen Pinterest Raw Extractor",
+        "title": "PinFetch Pro // Premium Pinterest Downloader",
         "category": "Beta Testing",
         "keywords": [
             "pinterest-downloader-tools",
