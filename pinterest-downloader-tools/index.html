@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartGen Pinterest Raw Extractor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; }
+        .loader { border-top-color: #3b82f6; -webkit-animation: spinner 1.5s linear infinite; animation: spinner 1.5s linear infinite; }
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="max-w-2xl w-full bg-slate-800 rounded-xl shadow-2xl p-8 border border-slate-700">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-white mb-2">🚀 SmartGen Tools</h1>
+            <p class="text-slate-400">Pinterest HD Downloader (100% Static for GitHub Pages)</p>
+        </div>
+
+        <div class="flex flex-col gap-4">
+            <input type="url" id="pin-url" placeholder="Paste Pinterest URL here (e.g., https://pin.it/... or pinterest.com/...)" 
+                class="w-full px-4 py-3 bg-slate-900 border border-slate-600 rounded-lg focus:outline-none focus:border-blue-500 text-white placeholder-slate-500">
+            
+            <button onclick="extractMedia()" id="extract-btn"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors flex justify-center items-center gap-2">
+                <span>Extract Raw File</span>
+            </button>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="hidden mt-8 flex flex-col items-center">
+            <div class="loader ease-linear rounded-full border-4 border-t-4 border-slate-600 h-10 w-10 mb-4"></div>
+            <p class="text-slate-400">Fetching data directly via browser proxy...</p>
+        </div>
+
+        <!-- Result Container -->
+        <div id="result-container" class="hidden mt-8 text-center bg-slate-900 p-6 rounded-lg border border-slate-700">
+            <h3 class="text-xl font-bold text-green-400 mb-4">✅ Extraction Successful!</h3>
+            
+            <div id="media-preview" class="mb-6 flex justify-center"></div>
+            
+            <a id="download-link" href="#" target="_blank" 
+                class="inline-block bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+                Open / Download HD File
+            </a>
+            <p class="text-xs text-slate-500 mt-3">Right-click the link/button and select "Save As" to download.</p>
+        </div>
+
+        <!-- Error Container -->
+        <div id="error-container" class="hidden mt-8 text-center bg-red-900/30 border border-red-500/50 p-4 rounded-lg text-red-400">
+        </div>
+    </div>
+
+    <script>
+        async function extractMedia() {
+            const urlInput = document.getElementById('pin-url').value;
+            const loading = document.getElementById('loading');
+            const resultDiv = document.getElementById('result-container');
+            const errorDiv = document.getElementById('error-container');
+            const btn = document.getElementById('extract-btn');
+
+            if (!urlInput) {
+                alert("Please enter a valid Pinterest URL.");
+                return;
+            }
+
+            resultDiv.classList.add('hidden');
+            errorDiv.classList.add('hidden');
+            loading.classList.remove('hidden');
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+
+            try {
+                // Using AllOrigins free CORS proxy to fetch the HTML directly in the browser
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(urlInput)}`;
+                
+                const response = await fetch(proxyUrl);
+                if (!response.ok) throw new Error("Network response was not ok.");
+                
+                const data = await response.json();
+                const html = data.contents;
+                
+                // Parse the fetched HTML
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, "text/html");
+                
+                let rawUrl = "";
+                let type = "";
+                let preview = "";
+
+                // Check for Video Meta Tag first
+                const videoTag = doc.querySelector('meta[property="og:video"]');
+                const imageTag = doc.querySelector('meta[property="og:image"]');
+
+                if (videoTag) {
+                    type = "video";
+                    rawUrl = videoTag.content; // Pinterest exposes direct .mp4 here usually
+                    preview = rawUrl;
+                } else if (imageTag) {
+                    type = "image";
+                    let compressedUrl = imageTag.content;
+                    // Replace /736x/ or /564x/ with /originals/ for raw HD quality
+                    rawUrl = compressedUrl.replace(/\/[0-9]+x\//, '/originals/');
+                    preview = compressedUrl;
+                } else {
+                    throw new Error("Could not detect media. The pin might be private or a complex Idea Pin.");
+                }
+
+                // Update UI with results
+                document.getElementById('download-link').href = rawUrl;
+                const previewDiv = document.getElementById('media-preview');
+                
+                if (type === 'video') {
+                    previewDiv.innerHTML = '<span class="text-5xl">🎥</span><br><span class="text-sm text-slate-400 mt-2">HD Video Ready</span>';
+                } else {
+                    previewDiv.innerHTML = `<img src="${preview}" class="max-h-64 rounded-md shadow-md border border-slate-600">`;
+                }
+
+                loading.classList.add('hidden');
+                resultDiv.classList.remove('hidden');
+
+            } catch (err) {
+                loading.classList.add('hidden');
+                errorDiv.innerText = "Error extracting file: " + err.message;
+                errorDiv.classList.remove('hidden');
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
+            }
+        }
+    </script>
+</body>
+</html>
